@@ -75,7 +75,8 @@ const { badge, pwned } = Astro.props;
   window.addEventListener('breach', () => { script = prep(i18n.hackerBreach); i = 0; if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min'); });
 
   const lines: string[] = [];
-  const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; };
+  // Umbrochene Zeilen sind höher als das Fenster: immer bis zur neuesten Zeile scrollen.
+  const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; out.scrollTop = out.scrollHeight; };
   const wrap = (t: string, c?: string) => (c ? `<span class="${c}">${esc(t)}</span>` : esc(t));
 
   if (reduce) {

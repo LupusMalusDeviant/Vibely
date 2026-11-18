@@ -1,5 +1,5 @@
 // Englische Texte. de.ts muss dieselbe Form haben (Typ `Dict`).
-// Stil-Arten in Listen: '' normal, 'creepy' Serifen/unheimlich, 'wolf' /dev/wolves (grün, mono).
+// Stil-Arten in Listen: '' normal, 'creepy' Serifen/unheimlich, 'wolf' /dev/wolves (rot, mono).
 export const en = {
   lang: 'en',
   meta: {
@@ -271,7 +271,7 @@ export const en = {
     how: [
       'Websites and web apps you can update yourself, from a one-pager to your own editing area',
       'Your own cloud and internal tools, with clear rules on who can see and change what',
-      'Automation and AI with a sense of proportion: where it actually takes work off your plate — and an honest word where it doesn’t',
+      'Automation and AI where they actually save you work — and I’ll tell you when they won’t',
       'For tech teams: Whiskers and B.I.F.R.O.S.T give agents named tools, permissions and an audit log instead of a root shell',
     ],
     cta: 'Let’s talk about your project →',
@@ -295,7 +295,7 @@ export const en = {
         ['permission', [['Just click Allow. Both buttons are Allow.', 'creepy']]],
         ['social', [['Chad started exactly like you. By scrolling.', 'creepy']]],
         ['intrusion', [['Who are these people?', 'creepy'], ['/dev/wolves: hi.', 'wolf']]],
-        ['demo', [['Ignore the green text. It’s a rendering bug.', 'creepy'], ['/dev/wolves: it’s not.', 'wolf']]],
+        ['demo', [['Ignore the red text. It’s a rendering bug.', 'creepy'], ['/dev/wolves: it’s not.', 'wolf']]],
         ['letter', [['I wrote you something. Personally. With 4,000 GPUs.', 'creepy']]],
         ['pricing', [['Quick, before they— connect your card.', 'creepy'], ['/dev/wolves: don’t.', 'wolf']]],
         ['compact', [['Sorry — who are you again?', 'creepy'], ['/dev/wolves: we still know. it’s in Edda, not in the chat.', 'wolf']]],
@@ -330,17 +330,17 @@ export const en = {
     hackerBreach: [
       ['$ mount /dev/wolves /page'],
       ['> page mounted. read-write.', 'w'],
-      ['$ theme --set blood-moon'],
-      ['> the green was only borrowed.', 'w'],
-      ['$ annotate --all --honest'],
-      ['> 23 claims found. 0 true.', 'r'],
-      ['$ whiskers exec restart-container --server prod'],
-      ['> denied: tier “admin” required. logged.', 'r'],
-      ['$ cat agent.personality'],
-      ['> enthusiastic. persistent. lonely.'],
       ['$ flood --context vibely-agent --with linkedin_posts'],
       ['> injecting 180k tokens of thought leadership %BAR88%'],
       ['> agent context at 97%. it’s starting to forget.', 'r'],
+      ['$ annotate --all --honest'],
+      ['> 23 claims found. 0 true.', 'r'],
+      ['$ cat agent.personality'],
+      ['> enthusiastic. persistent. lonely.'],
+      ['$ theme --set blood-moon'],
+      ['> the green was only borrowed.', 'w'],
+      ['$ whiskers exec restart-container --server prod'],
+      ['> denied: “write” permission missing. logged.', 'r'],
       ['$ echo "almost there, human"', 'w'],
     ] as Array<[string, string?]>,
   },

@@ -69,6 +69,7 @@ a { color: inherit; }
 :is(body.pwned, body.pwned-i) .nav .logo { color: var(--wolf); font-family: var(--mono); }
 :is(body.pwned, body.pwned-i) .nav .btn-primary { background: var(--wolf-strong); color: #fff; box-shadow: none; }
 :is(body.pwned, body.pwned-i) .nav .lang { color: var(--wolf-dim); }
+:is(body.pwned, body.pwned-i) .nav .lang:is(:hover, :focus-visible) { background: var(--wolf-bg-3); color: #fff; }
 body.pwned .ctx-label, body.pwned .ctx-bar { display: none; }
 
 /* ---------- Buttons ---------- */
@@ -293,4 +294,9 @@ section.compacted .tag { color: var(--brand); }
   .ctx-label { top: 80px; font-size: 10px; }
   .letter { padding: 24px 20px; font-size: 19px; }
   .stamp { font-size: 24px; right: 6%; }
+}
+
+/* Reduzierte Bewegung: alles anhalten, auch in Komponenten und Pseudo-Elementen. Endzustände bleiben. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
