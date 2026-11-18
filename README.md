@@ -37,3 +37,10 @@ npm run build    # statisch nach dist/, je Sprache eine eigenständige HTML-Date
 - Keine Tracker, nichts wird gesendet. `prefers-reduced-motion` schaltet die Animationen ab.
 
 Neuer Abschnitt, der mitkomprimiert werden soll: `<section data-summary={…}>` direkt in `<main>`.
+
+## Deployment
+
+GitHub Pages über `.github/workflows/pages.yml`: Jeder Push auf `main` baut und veröffentlicht.
+Adresse und Basispfad liefert `actions/configure-pages` (als `SITE`/`BASE` an Astro), deshalb
+funktioniert dieselbe Konfiguration unter `…github.io/Vibely/` wie mit eigener Domain.
+Einmalig nötig: *Settings → Pages → Build and deployment → Source: GitHub Actions*.
