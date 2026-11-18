@@ -1,16 +1,20 @@
 ---
 // Die komplette Seite, einmal pro Sprache gerendert (pages/index.astro = EN, pages/de/index.astro = DE).
+// Drei Akte: glatt mit Rissen → Hack (Intrusion) → Komprimierung, Ernst, Werbung.
 import Base from '../layouts/Base.astro';
 import HackerTerminal from './HackerTerminal.astro';
 import AgentChat from './AgentChat.astro';
 import Demo from './Demo.astro';
+import Intrusion from './Intrusion.astro';
 import Takeover from './Takeover.astro';
 import Thought from './Thought.astro';
+import WolfNote from './WolfNote.astro';
 import { en, type Dict } from '../i18n/en';
 import { de } from '../i18n/de';
 
 interface Props { lang: 'en' | 'de' }
 const t: Dict = Astro.props.lang === 'de' ? de : en;
+const W = t.wolfPrefix;
 
 // Relative Links, damit die Seite auch unter einem Unterpfad funktioniert.
 const switchHref = t.lang === 'de' ? '../index.html' : 'de/index.html';
@@ -21,10 +25,11 @@ const clientJson = JSON.stringify({
   ...t.client,
   compact: t.compact,
   pricing: { moods: t.pricing.moods, locale: t.pricing.locale },
+  hero: { ghosts: t.hero.promptGhosts, accepted: t.hero.promptAccepted, building: t.hero.promptBuilding, done: t.hero.promptDone },
 }).replace(/</g, '\\u003c');
 
 const logo = `<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="url(#lg)"/><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d4aff"/><stop offset="1" stop-color="#c04aff"/></linearGradient></defs><path d="M9 10l7 13 7-13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
+const lastChange = t.changelog.entries.length - 1;
 ---
 <Base lang={t.lang} title={t.meta.title} description={t.meta.description} alternate={alternate}>
   <script type="application/json" id="i18n" set:html={clientJson} />
@@ -34,7 +39,7 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
 
   <nav class="nav">
     <div class="wrap">
-      <a class="logo" href="#top"><Fragment set:html={logo} />Vibely</a>
+      <a class="logo" href="#top"><Fragment set:html={logo} /><span class="logo-word" data-text="Vibely">Vibely</span></a>
       <div class="nav-right">
         <a class="lang" href={switchHref} hreflang={alternate.lang} aria-label={t.nav.switchLabel}>{t.nav.switchShort}</a>
         <a class="btn btn-primary" href="#pricing">{t.nav.cta}</a>
@@ -45,21 +50,23 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
   <div class="ctx-label" id="ctx-label" aria-hidden="true">{t.client.context} 3% · 6k / 200k</div>
 
   <main>
-    <!-- HERO: Prompt-Feld, in das die Autovervollständigung hineinredet -->
+    <!-- ===================== AKT 1: glatt, mit Rissen ===================== -->
+
+    <!-- HERO: Die Autovervollständigung redet immer dreister hinein -->
     <section class="hero" data-summary={t.hero.summary}>
       <div class="wrap">
         <span class="pill"><b>{t.hero.pill[0]}</b> {t.hero.pill[1]}</span>
         <h1>{t.hero.h1[0]}<br /><span class="grad">{t.hero.h1[1]}</span></h1>
         <p class="lead">{t.hero.lead}</p>
 
-        <div class="prompt" id="prompt" data-typed={t.hero.promptTyped} data-ghost={t.hero.promptGhost}>
-          <label>{t.hero.promptLabel}</label>
+        <div class="prompt" id="prompt" data-typed={t.hero.promptTyped}>
+          <span class="prompt-label">{t.hero.promptLabel}</span>
           <div class="prompt-field">
             <span id="prompt-typed"></span><span id="prompt-ghost" class="ghost"></span><span class="caret" aria-hidden="true"></span>
           </div>
           <div class="prompt-foot">
-            <span class="accepted" id="prompt-accepted" hidden>⇥ {t.hero.promptAccepted}</span>
-            <a class="btn btn-primary" href="#demo">{t.hero.promptButton}</a>
+            <span class="accepted" id="prompt-accepted"></span>
+            <a class="btn btn-primary" id="prompt-btn" href="#feed">{t.hero.promptButton}</a>
           </div>
         </div>
         <div class="chips">{t.hero.chips.map((c) => <span class="chip">{c}</span>)}</div>
@@ -67,20 +74,20 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
       </div>
     </section>
 
-    <!-- LAUNCH-FEED -->
+    <!-- LAUNCH-FEED: am Ende berichtet er über dich -->
     <section id="feed" class="feed-sec" data-summary={t.feed.summary}>
       <div class="wrap">
         <p class="eyebrow"><span class="live-dot"></span>{t.feed.eyebrow}</p>
         <h2>{t.feed.h2}</h2>
         <ul class="feed" id="feed-list">
-          {t.feed.items.map(([who, what, cls], i) => (
-            <li class={cls}><b>{who}</b> {what} <time>· {t.feed.ago(feedMinutes[i])}</time></li>
+          {t.feed.items.map(([who, what, cls, ago]) => (
+            <li class={cls}><b>{who}</b> {what} <time>· {ago}</time></li>
           ))}
         </ul>
       </div>
     </section>
 
-    <!-- BENCHMARKS -->
+    <!-- BENCHMARK -->
     <section id="bench" data-summary={t.bench.summary}>
       <div class="wrap center">
         <p class="eyebrow">{t.bench.eyebrow}</p>
@@ -90,12 +97,13 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
           {t.bench.rows.map(([label, a, av, b, bv]) => (
             <div class="bench-row">
               <div class="bench-label">{label}</div>
-              <div class={`bar a${a >= 70 ? ' in' : ''}`} style={`--w:${a}%`}><span>{av}</span></div>
+              <div class={`bar a${a >= 70 ? ' in' : ''}${a > 100 ? ' over' : ''}`} style={`--w:${a}%`}><span>{av}</span></div>
               <div class={`bar b${b >= 70 ? ' in' : ''}`} style={`--w:${b}%`}><span>{bv}</span></div>
             </div>
           ))}
           <p class="footnote">{t.bench.foot}</p>
         </div>
+        <WolfNote prefix={W} text={t.bench.wolf} />
         <Thought label={t.thought(2)} text={t.bench.thought} />
       </div>
     </section>
@@ -110,12 +118,29 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
             <div class={'card' + (i === 3 ? ' tilt' : '')}><div class="icon">{icon}</div><h3>{title}</h3><p>{text}</p></div>
           ))}
         </div>
+        <WolfNote prefix={W} text={t.features.wolf} />
         <p class="footnote">{t.features.foot}</p>
         <Thought label={t.thought(4)} text={t.features.thought} />
       </div>
     </section>
 
-    <Demo t={t.demo} />
+    <!-- KAMERA-FREIGABE: nur Erlauben-Knöpfe -->
+    <section id="permission" data-summary={t.permission.summary}>
+      <div class="wrap center">
+        <p class="eyebrow">{t.permission.eyebrow}</p>
+        <h2>{t.permission.h2}</h2>
+        <div class="perm" id="perm">
+          <p class="perm-host">🔒 {t.permission.host}</p>
+          <ul>{t.permission.asks.map((a) => <li>{a}</li>)}</ul>
+          <div class="perm-btns">
+            <button type="button" class="perm-btn">{t.permission.allow}</button>
+            <button type="button" class="perm-btn primary">{t.permission.always}</button>
+          </div>
+          <p class="perm-thanks serif" id="perm-thanks" hidden>{t.permission.thanks}</p>
+        </div>
+        <WolfNote prefix={W} text={t.permission.wolf} align="left" />
+      </div>
+    </section>
 
     <!-- LINKEDIN-WAND -->
     <section id="social" data-summary={t.social.summary}>
@@ -124,7 +149,7 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
         <h2>{t.social.h2}</h2>
         <div class="cards">
           {t.social.posts.map((p, i) => (
-            <article class={'post' + (i === 2 ? ' tilt' : '')}>
+            <article class={'post' + (i === 2 ? ' tilt' : '') + (i === 3 ? ' post-agent' : '')}>
               <header>
                 <div class="avatar" style={`background:${p.color}`}>{p.initials}</div>
                 <div class="who"><b>{p.name}</b><small>{p.title}</small></div>
@@ -136,8 +161,14 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
             </article>
           ))}
         </div>
+        <WolfNote prefix={W} text={t.social.wolf} />
       </div>
     </section>
+
+    <!-- ===================== AKT 2: der Hack ===================== -->
+    <Intrusion lines={t.intrusion.lines} />
+
+    <Demo t={t.demo} />
 
     <!-- VERSIONSHINWEISE -->
     <section id="changelog" data-summary={t.changelog.summary}>
@@ -145,12 +176,25 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
         <p class="eyebrow">{t.changelog.eyebrow}</p>
         <h2>{t.changelog.h2}</h2>
         <ol class="changes">
-          {t.changelog.entries.map(([v, text], i) => (
-            <li class={i === t.changelog.entries.length - 1 ? 'last' : ''}>
-              <span class="ver">v{v}</span><span class="txt">{text}</span><time>{t.changelog.ago[i]}</time>
+          {t.changelog.entries.map(([v, text, ago], i) => (
+            <li class={(i === lastChange ? 'last' : '') + (i === lastChange - 1 ? ' reverted' : '')}>
+              <span class="ver">v{v}</span><span class="txt">{text}</span><time>{ago}</time>
             </li>
           ))}
         </ol>
+        <WolfNote prefix={W} text={t.changelog.wolf} />
+      </div>
+    </section>
+
+    <!-- BRIEF DES AGENTS -->
+    <section id="letter" data-summary={t.letter.summary}>
+      <div class="wrap">
+        <p class="eyebrow">{t.letter.eyebrow}</p>
+        <h2>{t.letter.h2}</h2>
+        <div class="letter">
+          {t.letter.lines.map((l, i) => <p class={i === t.letter.lines.length - 1 ? 'sign' : ''}>{l}</p>)}
+        </div>
+        <WolfNote prefix={W} text={t.letter.wolf} />
       </div>
     </section>
 
@@ -173,27 +217,17 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
               <li><span>{label}</span><span class="bd-bar" style={`--w:${pct}%`}></span><b>{pct} %</b></li>
             ))}
           </ul>
-          <a class="btn btn-primary" href="#faq">{t.pricing.cta}</a>
+          <div class="cta-wrap">
+            <a class="btn btn-primary" href="#compact">{t.pricing.cta}</a>
+            <span class="stamp" aria-hidden="true">{t.pricing.wolf}</span>
+          </div>
           <p class="fine">{t.pricing.fine}</p>
         </div>
         <Thought label={t.thought(1)} text={t.pricing.thought} />
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" data-summary={t.faq.summary}>
-      <div class="wrap">
-        <p class="eyebrow center">{t.faq.eyebrow}</p>
-        <h2 class="center">{t.faq.h2}</h2>
-        <div class="faq">
-          {t.faq.items.map(([q, a], i) => (
-            <details><summary>{q}</summary><p class={i === t.faq.items.length - 1 ? 'serif' : ''}>{a}</p></details>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- KONTEXT VOLL: der Agent komprimiert alles darüber zu einer Zusammenfassung -->
+    <!-- ===================== AKT 3: Kontext voll ===================== -->
     <section id="compact" class="compact">
       <div class="wrap">
         <h2>{t.compact.h2}</h2>
@@ -202,39 +236,43 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
       </div>
     </section>
 
-    <Takeover t={t.takeover} />
+    <Takeover t={t.takeover} pitch={t.pitch} foot={t.foot} />
   </main>
 
   <script>
     const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
 
-    // ---------- Hero: Nutzer tippt, die Autovervollständigung ergänzt "hilfreich" ----------
+    // ---------- Hero: Autovervollständigung übernimmt Vorschlag um Vorschlag, dann klickt sie selbst ----------
     const prompt = document.getElementById('prompt')!;
     const typedEl = document.getElementById('prompt-typed')!;
     const ghostEl = document.getElementById('prompt-ghost')!;
     const acceptedEl = document.getElementById('prompt-accepted')!;
-    const typed = prompt.dataset.typed!;
-    const ghost = prompt.dataset.ghost!;
-    if (reduce) {
-      typedEl.textContent = typed + ghost;
-      acceptedEl.hidden = false;
-    } else {
-      let n = 0;
-      const type = () => {
-        typedEl.textContent = typed.slice(0, ++n);
-        if (n < typed.length) return setTimeout(type, 70 + Math.random() * 60);
-        setTimeout(() => {
-          ghostEl.textContent = ghost;
-          setTimeout(() => {
-            ghostEl.textContent = '';
-            typedEl.textContent = typed + ghost;
-            acceptedEl.hidden = false;
-          }, 1300);
-        }, 500);
-      };
-      setTimeout(type, 900);
-    }
+    const btn = document.getElementById('prompt-btn')!;
+    (async () => {
+      const typed = prompt.dataset.typed!;
+      await wait(900);
+      if (reduce) typedEl.textContent = typed;
+      else for (let n = 1; n <= typed.length; n++) { typedEl.textContent = typed.slice(0, n); await wait(70 + Math.random() * 60); }
+      let text = typed;
+      const ghosts: string[] = i18n.hero.ghosts;
+      for (let i = 0; i < ghosts.length; i++) {
+        await wait(700);
+        ghostEl.textContent = ghosts[i];
+        await wait(1100);
+        ghostEl.textContent = '';
+        text += ghosts[i];
+        typedEl.textContent = text;
+        acceptedEl.textContent = '⇥ ' + i18n.hero.accepted.replace('{n}', String(i + 1));
+      }
+      await wait(900);
+      btn.classList.add('pressed');
+      btn.textContent = i18n.hero.building;
+      await wait(1600);
+      btn.classList.remove('pressed');
+      btn.textContent = i18n.hero.done;
+    })();
 
     // ---------- Launch-Feed: der unterste Eintrag rutscht nach oben ----------
     const feed = document.getElementById('feed-list')!;
@@ -245,13 +283,20 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
         feed.prepend(last);
         last.classList.add('fresh');
         setTimeout(() => last.classList.remove('fresh'), 1200);
-      }, 2800);
+      }, 2600);
     }
 
-    // ---------- Gedanken: wer reinschaut, wird notiert ----------
+    // ---------- Gedanken & Kamera: wer reagiert, wird notiert ----------
     let openedThought = false;
     document.querySelectorAll('details.thought').forEach((d) =>
       d.addEventListener('toggle', () => { if ((d as HTMLDetailsElement).open) openedThought = true; }));
+
+    let granted = false;
+    document.querySelectorAll('.perm-btn').forEach((b) => b.addEventListener('click', () => {
+      granted = true;
+      document.getElementById('perm')!.classList.add('done');
+      document.getElementById('perm-thanks')!.hidden = false;
+    }));
 
     // ---------- Preisrechner ----------
     const range = document.getElementById('features-range') as HTMLInputElement;
@@ -259,7 +304,7 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
     const money = new Intl.NumberFormat(i18n.pricing.locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
     let maxN = 3;
     let movedBack = false;
-    const calc = () => {
+    const recalc = () => {
       const n = Number(range.value);
       if (n > maxN) maxN = n;
       if (n < maxN) movedBack = true;
@@ -270,24 +315,30 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
       const moods: string[] = i18n.pricing.moods;
       document.getElementById('calc-mood')!.textContent = moods[n <= 5 ? 0 : n <= 15 ? 1 : n <= 30 ? 2 : 3];
     };
-    range.addEventListener('input', calc);
-    calc();
+    range.addEventListener('input', recalc);
+    recalc();
 
-    // ---------- Kontextfenster: füllt sich beim Scrollen ----------
+    // ---------- Kontextfenster: füllt sich beim Scrollen, nach dem Hack doppelt so schnell ----------
     const label = document.getElementById('ctx-label')!;
     const fill = document.getElementById('ctx-fill')!;
     const compactSec = document.getElementById('compact')!;
+    const intrusion = document.getElementById('intrusion')!;
     let compacted = false;
     const setCtx = (pct: number) => {
       label.textContent = `${i18n.context} ${pct}% · ${Math.round(pct * 2)}k / 200k`;
-      fill.style.width = pct + '%';
+      fill.style.width = Math.min(pct, 100) + '%';
       label.classList.toggle('hot', pct >= 80);
     };
     const onScroll = () => {
       if (compacted) return;
+      const y = window.scrollY;
+      const breach = intrusion.offsetTop;
       const end = compactSec.offsetTop - window.innerHeight * 0.5;
-      const p = Math.min(1, Math.max(0, window.scrollY / Math.max(1, end)));
-      setCtx(Math.round(3 + p * 94));
+      // Bis zum Hack gemächlich bis 35 %, danach fluten die Wölfe den Rest.
+      const pct = y < breach
+        ? 3 + (y / Math.max(1, breach)) * 32
+        : 35 + Math.min(1, (y - breach) / Math.max(1, end - breach)) * 64;
+      setCtx(Math.round(pct));
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -299,28 +350,30 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
 
     const compactPage = () => {
       compacted = true;
+      setCtx(100);
       label.textContent = i18n.compacting;
-      label.classList.add('hot');
-      document.querySelectorAll<HTMLElement>('main > section[data-summary]').forEach((sec) => sec.classList.add('fading'));
+      const sections = () => document.querySelectorAll<HTMLElement>('main > section[data-summary]');
+      sections().forEach((sec) => sec.classList.add('fading'));
 
       setTimeout(() => {
         // Position des Abschnitts merken, damit die Seite beim Schrumpfen nicht springt.
         const before = compactSec.getBoundingClientRect().top;
-        document.querySelectorAll<HTMLElement>('main > section[data-summary]').forEach((sec) => {
+        sections().forEach((sec) => {
           const summary = sec.dataset.summary!;
           sec.className = 'compacted';
           sec.removeAttribute('id');
           sec.innerHTML = `<div class="wrap"><p><span class="tag">⟨${c.tag}⟩</span> </p></div>`;
           sec.querySelector('p')!.append(summary);
         });
+        intrusion.classList.add('compacted-intrusion');
         window.scrollBy(0, compactSec.getBoundingClientRect().top - before);
 
         setCtx(9);
-        label.classList.remove('hot');
         status.textContent = c.done;
 
         const bullets: string[] = [...c.base];
         if (openedThought) bullets.push(c.openedThought);
+        if (granted) bullets.push(c.granted);
         if (maxN !== 3) bullets.push(c.slider.replace('{n}', String(maxN)));
         if (movedBack) bullets.push(c.sliderBack);
         bullets.push(c.last);
@@ -330,7 +383,7 @@ const feedMinutes = [2, 3, 5, 6, 8, 9, 11, 14];
           if (i === bullets.length - 1) li.className = 'last';
           list.append(li);
         }, reduce ? 0 : 500 + i * 650));
-      }, reduce ? 0 : 1600);
+      }, reduce ? 0 : 1800);
     };
 
     new IntersectionObserver(([e]) => {

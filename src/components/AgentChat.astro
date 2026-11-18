@@ -1,9 +1,10 @@
 ---
-// Der "hilfsbereite" Chat-Agent unten rechts. Meldet sich je Abschnitt –
-// erst Verkauf, dann zunehmend zu aufmerksam. Keine echten Daten, alles gespielt.
+// Der "hilfsbereite" Chat-Agent unten rechts. Meldet sich je Abschnitt – erst Verkauf,
+// dann zu aufmerksam; nach dem Hack funken die Wölfe dazwischen.
+// Keine echten Daten, alles gespielt.
 ---
 <div class="agent" id="agent" role="status" aria-live="polite">
-  <div class="agent-bubble" id="agent-bubble" hidden></div>
+  <div class="agent-stack" id="agent-stack"></div>
   <button type="button" class="agent-fab" id="agent-fab" aria-label="Vibely Agent">
     <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10l7 13 7-13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
@@ -11,54 +12,89 @@
 
 <style>
   .agent { position: fixed; right: 16px; bottom: 16px; z-index: 31; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+  .agent-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
   .agent-fab {
     width: 54px; height: 54px; border-radius: 50%; border: 0; cursor: pointer;
     background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: 0 10px 26px -8px rgba(109,74,255,.8);
     display: grid; place-items: center;
   }
   .agent-fab svg { width: 24px; height: 24px; }
-  .agent-bubble {
+  .agent-stack :global(.bubble) {
     max-width: 260px; background: #fff; border: 1px solid var(--line); border-radius: 16px 16px 4px 16px;
     padding: 12px 14px; font-size: 14px; box-shadow: var(--shadow); animation: pop .25s ease-out;
   }
-  .agent-bubble.creepy { font-family: var(--serif); font-size: 16px; }
+  .agent-stack :global(.bubble.creepy) { font-family: var(--serif); font-size: 16px; }
+  .agent-stack :global(.bubble.wolf) { font: 12.5px/1.45 var(--mono); background: #0b0f0c; color: #39ff88; border-color: #1d3a26; border-radius: 6px; }
   @keyframes pop { from { opacity: 0; transform: translateY(6px); } }
   .agent.gone { display: none; }
-  @media (max-width: 560px) { .agent-bubble { max-width: 220px; font-size: 13px; } }
+  :global(body.breached) .agent-fab { animation: twitch 4s infinite; }
+  @keyframes twitch { 0%, 94%, 100% { transform: none; } 95% { transform: translate(-3px, 1px) rotate(-8deg); } 97% { transform: translate(2px, -1px) rotate(6deg); } }
+  @media (prefers-reduced-motion: reduce) { :global(body.breached) .agent-fab { animation: none; } }
+  @media (max-width: 560px) { .agent-stack :global(.bubble) { max-width: 230px; font-size: 13px; } }
 </style>
 
 <script>
   const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
-  const bubble = document.getElementById('agent-bubble')!;
+  const stack = document.getElementById('agent-stack')!;
   const fab = document.getElementById('agent-fab')!;
   const agent = document.getElementById('agent')!;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  let hideTimer: number | undefined;
-  function say(text: string, creepy = false, ms = 6500) {
-    bubble.hidden = false;
-    bubble.textContent = text;
-    bubble.classList.toggle('creepy', creepy);
-    bubble.style.animation = 'none';
-    void bubble.offsetWidth;
-    bubble.style.animation = '';
-    clearTimeout(hideTimer);
-    hideTimer = window.setTimeout(() => (bubble.hidden = true), ms);
-  }
+  // Nachrichten werden nacheinander gezeigt und verschwinden nach einer Weile.
+  let queue: Array<[string, string]> = [];
+  let busy = false;
+  const pump = () => {
+    if (busy || !queue.length) return;
+    busy = true;
+    const [text, style] = queue.shift()!;
+    const b = document.createElement('div');
+    b.className = 'bubble ' + style;
+    b.textContent = text;
+    stack.append(b);
+    while (stack.children.length > 2) stack.firstElementChild!.remove();
+    setTimeout(() => { busy = false; pump(); }, 1400);
+    setTimeout(() => b.remove(), 6500);
+  };
+  const say = (msgs: Array<[string, string]>) => { queue.push(...msgs); pump(); };
 
-  const cues: Array<[string, string, boolean]> = i18n.agent.cues;
+  const cues: Array<[string, Array<[string, string]>]> = i18n.agent.cues;
   const seen = new Set<string>();
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       const cue = cues.find(([id]) => id === e.target.id);
-      if (cue && !seen.has(cue[0])) { seen.add(cue[0]); say(cue[1], cue[2]); }
+      if (cue && !seen.has(cue[0])) { seen.add(cue[0]); say(cue[1]); }
     }
   }, { threshold: 0.35 });
   cues.forEach(([id]) => { const el = document.getElementById(id); if (el) io.observe(el); });
 
   let clicks = 0;
   const replies: string[] = i18n.agent.replies;
-  fab.addEventListener('click', () => say(replies[Math.min(clicks++, replies.length - 1)], clicks > 2));
+  fab.addEventListener('click', () => say([[replies[Math.min(clicks++, replies.length - 1)], clicks > 2 ? 'creepy' : '']]));
+
+  // Wer nach oben scrollt, sucht vermutlich den Ausschalter.
+  let maxY = 0;
+  let saidUp = false;
+  window.addEventListener('scroll', () => {
+    maxY = Math.max(maxY, window.scrollY);
+    if (!saidUp && maxY > 1500 && window.scrollY < maxY - 500) { saidUp = true; say([[i18n.agent.scrollUp, 'creepy']]); }
+  }, { passive: true });
+
+  // Wer stehen bleibt, bekommt Hilfe beim Scrollen. Einmal.
+  let idleTimer: number | undefined;
+  let saidIdle = false;
+  const armIdle = () => {
+    clearTimeout(idleTimer);
+    if (saidIdle) return;
+    idleTimer = window.setTimeout(() => {
+      if (window.scrollY < 600 || agent.classList.contains('gone')) return armIdle();
+      saidIdle = true;
+      say([[i18n.agent.idle, 'creepy']]);
+      if (!reduce) setTimeout(() => window.scrollBy({ top: 320, behavior: 'smooth' }), 2200);
+    }, 9000);
+  };
+  window.addEventListener('scroll', armIdle, { passive: true });
+  armIdle();
 
   // Tab-Titel wechselt, wenn man den Tab verlässt.
   const original = document.title;

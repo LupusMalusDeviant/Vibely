@@ -67,8 +67,12 @@ const { badge, pwned } = Astro.props;
   const bar = (p: number) => '[' + '█'.repeat(Math.round(p / 10)) + '░'.repeat(10 - Math.round(p / 10)) + '] ' + p + '%';
   const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 
-  const script: Array<[string, string?]> = i18n.hacker.map(([t, c]: [string, string?]) =>
-    [t.replace(/%BAR(\d+)%/, (_: string, p: string) => bar(Number(p))), c]);
+  const prep = (list: Array<[string, string?]>): Array<[string, string?]> =>
+    list.map(([t, c]) => [t.replace(/%BAR(\d+)%/, (_: string, p: string) => bar(Number(p))), c]);
+  let script = prep(i18n.hacker);
+  let i = 0;
+  // Nach dem Hack: Angriffsmodus. Die Wölfe arbeiten jetzt sichtbar am Agent.
+  window.addEventListener('breach', () => { script = prep(i18n.hackerBreach); i = 0; if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min'); });
 
   const lines: string[] = [];
   const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; };
@@ -78,7 +82,6 @@ const { badge, pwned } = Astro.props;
     script.slice(0, 8).forEach(([t, c]) => lines.push(wrap(t, c)));
     render();
   } else {
-    let i = 0;
     const typeNext = () => {
       const [text, cls] = script[i++ % script.length];
       let n = 0;
@@ -102,5 +105,10 @@ const { badge, pwned } = Astro.props;
       term.classList.toggle('gone', e.isIntersecting);
       document.body.classList.toggle('pwned', e.isIntersecting);
     }, { threshold: 0.05 }).observe(takeover);
+  }
+  // Während der Unterbrechung gehört auch die Navigation den Wölfen.
+  const intrusion = document.getElementById('intrusion');
+  if (intrusion) {
+    new IntersectionObserver(([e]) => document.body.classList.toggle('pwned-i', e.isIntersecting), { threshold: 0.3 }).observe(intrusion);
   }
 </script>

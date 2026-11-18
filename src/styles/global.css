@@ -50,10 +50,10 @@ a { color: inherit; }
 }
 .ctx-label.hot { color: var(--bad); border-color: #f1c9c6; }
 
-body.pwned .nav { background: rgba(7, 10, 8, .92); border-color: #1d3a26; }
-body.pwned .nav .logo { color: #39ff88; font-family: var(--mono); }
-body.pwned .nav .btn-primary { background: #39ff88; color: #070a08; box-shadow: none; }
-body.pwned .nav .lang { color: #6fae84; }
+:is(body.pwned, body.pwned-i) .nav { background: rgba(7, 10, 8, .92); border-color: #1d3a26; }
+:is(body.pwned, body.pwned-i) .nav .logo { color: #39ff88; font-family: var(--mono); }
+:is(body.pwned, body.pwned-i) .nav .btn-primary { background: #39ff88; color: #070a08; box-shadow: none; }
+:is(body.pwned, body.pwned-i) .nav .lang { color: #6fae84; }
 body.pwned .ctx-label, body.pwned .ctx-bar { display: none; }
 
 /* ---------- Buttons ---------- */
@@ -98,7 +98,7 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
   margin-top: 36px; background: #fff; border: 1px solid var(--line); border-radius: 22px;
   padding: 18px 18px 14px; box-shadow: var(--shadow);
 }
-.prompt label { font-size: 13px; font-weight: 700; color: var(--muted); }
+.prompt-label { font-size: 13px; font-weight: 700; color: var(--muted); }
 .prompt-field { font-size: 19px; min-height: 58px; padding: 8px 0 12px; }
 .prompt-field .ghost { color: #b4b0c2; }
 .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--brand); vertical-align: -3px; margin-left: 1px; animation: caret 1s steps(1) infinite; }
@@ -121,6 +121,8 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .feed li time { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .feed li.bad { color: var(--bad); }
 .feed li.fresh { background: var(--brand-soft); }
+.feed li.you { font-family: var(--serif); font-size: 17px; }
+.feed li.you b { color: var(--bad); }
 
 /* ---------- Benchmark ---------- */
 .bench { margin-top: 40px; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 26px; }
@@ -135,6 +137,9 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .bar { height: 22px; width: var(--w); min-width: 4px; border-radius: 6px; margin-top: 5px; position: relative; }
 .bar span { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--ink); }
 .bar.in span { left: auto; right: 8px; }
+.bench { overflow: hidden; }
+.bar.over { border-radius: 6px 0 0 6px; }
+.bar.over::after { content: '→'; position: absolute; right: -2px; top: 50%; transform: translate(100%, -50%); color: var(--brand); font-weight: 800; }
 .bar.a.in span { color: #fff; }
 
 /* ---------- Karten ---------- */
@@ -164,6 +169,7 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .changes li.last { transform: rotate(0.4deg); }
 .changes li.last .txt { font-family: var(--serif); font-weight: 500; font-size: 20px; }
 .changes li.last time { color: var(--bad); }
+.changes li.reverted .txt { text-decoration: line-through; text-decoration-color: #39ff88; text-decoration-thickness: 2px; }
 
 /* ---------- Preisrechner ---------- */
 .calc { margin-top: 40px; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 28px; box-shadow: var(--shadow); }
@@ -188,6 +194,58 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .faq summary::after { content: '+'; color: var(--brand); font-weight: 800; font-size: 20px; line-height: 1; }
 .faq details[open] summary::after { content: '–'; }
 .faq details p { margin: 0 0 20px; color: var(--muted); }
+
+/* ---------- Prompt-Knopf, der sich selbst drückt ---------- */
+#prompt-btn { transition: transform .15s, background .3s; }
+#prompt-btn.pressed { transform: scale(.94); filter: brightness(.9); }
+
+/* ---------- Kamera-Freigabe ---------- */
+.perm {
+  margin: 40px auto 0; max-width: 420px; text-align: left; background: #fff; border: 1px solid var(--line);
+  border-radius: 14px; padding: 20px 22px; box-shadow: 0 20px 50px -20px rgba(0,0,0,.35); font-size: 15px;
+}
+.perm-host { margin: 0 0 10px; font-weight: 700; }
+.perm ul { margin: 0 0 18px; padding-left: 20px; color: var(--muted); }
+.perm ul li { padding: 2px 0; }
+.perm-btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.perm-btn { font: 600 14px var(--sans); padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+.perm-btn.primary { background: #1a73e8; border-color: #1a73e8; color: #fff; }
+.perm.done .perm-btns { display: none; }
+.perm-thanks { margin: 0; font-size: 18px; }
+
+/* ---------- Brief ---------- */
+.letter {
+  margin-top: 36px; background: #fffdf8; border: 1px solid #eee6d6; border-radius: 4px; padding: 34px 32px;
+  font-family: var(--serif); font-size: 21px; line-height: 1.55; color: #2b2632; transform: rotate(-0.4deg);
+  box-shadow: 0 24px 50px -30px rgba(60, 40, 10, .45);
+}
+.letter p { margin: 0 0 14px; }
+.letter .sign { font-style: italic; margin: 22px 0 0; }
+
+/* ---------- Stempel über dem Bezahlknopf ---------- */
+.cta-wrap { position: relative; }
+.stamp {
+  position: absolute; right: 10%; top: 50%; transform: translateY(-50%) rotate(-9deg); pointer-events: none;
+  font: 700 30px var(--mono); color: #39ff88; background: #0b0f0c; border: 2px solid #39ff88; padding: 0 14px;
+  opacity: 0; transition: opacity .3s;
+}
+body.breached .stamp { opacity: .95; }
+
+/* ---------- Nach dem Hack: die Seite ist gebrochen ---------- */
+body.breached::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 15;
+  background: repeating-linear-gradient(0deg, rgba(20,60,30,.05) 0 1px, transparent 1px 3px);
+}
+body.breached .card, body.breached .calc, body.breached .changes, body.breached .bench { filter: saturate(.35); }
+body.breached .logo-word { position: relative; }
+body.breached .logo-word::after {
+  content: '/dev/wolves'; position: absolute; left: 0; top: 0; color: #39ff88; background: var(--bg);
+  font-family: var(--mono); font-size: 17px; animation: logoflip 5s infinite steps(1);
+}
+@keyframes logoflip { 0%, 82% { opacity: 0; } 83%, 92% { opacity: 1; } 93% { opacity: 0; } 95%, 97% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { body.breached .logo-word::after { animation: none; opacity: 0; } }
+.compacted-intrusion { min-height: 0 !important; padding: 10px 0 !important; }
+.compacted-intrusion pre { min-height: 0 !important; font-size: 12px !important; }
 
 /* ---------- Komprimierung ---------- */
 main > section.fading { transition: opacity 1.4s, filter 1.4s; opacity: .25; filter: blur(3px); }
@@ -218,4 +276,6 @@ section.compacted .tag { color: var(--brand); }
   .calc-out { grid-template-columns: 1fr; }
   .breakdown li { grid-template-columns: minmax(0, 1fr) 60px 40px; }
   .ctx-label { top: 80px; font-size: 10px; }
+  .letter { padding: 24px 20px; font-size: 19px; }
+  .stamp { font-size: 24px; right: 6%; }
 }

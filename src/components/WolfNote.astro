@@ -1,0 +1,44 @@
+---
+// Grüne Randnotiz von /dev/wolves, die sich beim Sichtbarwerden eintippt.
+// Steht schon vor dem Hack auf der Seite: Die Wölfe sind "seit dem Hero in den Wänden".
+interface Props { prefix: string; text: string; align?: 'left' | 'right' }
+const { prefix, text, align = 'right' } = Astro.props;
+---
+<aside class={`wolfnote ${align}`} data-text={text}>
+  <span class="wn-prefix">{prefix}</span> <span class="wn-text">{text}</span>
+</aside>
+
+<style>
+  .wolfnote {
+    display: block; width: fit-content; max-width: min(420px, 100%);
+    margin: 14px 0 0; padding: 8px 12px; text-align: left;
+    font: 12.5px/1.45 var(--mono); color: #39ff88; background: #0b0f0c;
+    border: 1px solid #1d3a26; border-radius: 6px; transform: rotate(-1.2deg);
+    box-shadow: 0 8px 20px -10px rgba(0,0,0,.45);
+  }
+  .wolfnote.right { margin-left: auto; transform: rotate(1.2deg); }
+  .wn-prefix { color: #6fae84; }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const notes = document.querySelectorAll<HTMLElement>('.wolfnote');
+  if (!reduce) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target.querySelector<HTMLElement>('.wn-text')!;
+        const full = (e.target as HTMLElement).dataset.text!;
+        let n = 0;
+        const tick = () => {
+          el.textContent = full.slice(0, ++n) + (n < full.length ? '▌' : '');
+          if (n < full.length) setTimeout(tick, 28 + Math.random() * 40);
+        };
+        el.textContent = '▌';
+        setTimeout(tick, 500);
+      }
+    }, { threshold: 0.9 });
+    notes.forEach((n) => io.observe(n));
+  }
+</script>

@@ -1,8 +1,8 @@
 ---
-// Der ernste Twist: /dev/wolves übernimmt die Seite – nicht um zu zerstören, sondern um zu reviewen.
+// Der ernste Teil am Ende, danach die echte Werbung für lupusmalus.dev.
 import type { Dict } from '../i18n/en';
-interface Props { t: Dict['takeover'] }
-const { t } = Astro.props;
+interface Props { t: Dict['takeover']; pitch: Dict['pitch']; foot: Dict['foot'] }
+const { t, pitch, foot } = Astro.props;
 const [b0, b1, b2, b3, b4] = t.body;
 ---
 <section id="takeover" class="takeover">
@@ -34,10 +34,21 @@ const [b0, b1, b2, b3, b4] = t.body;
 
     <p class="closing">{t.closing[0]} <span class="hl">{t.closing[1]}</span></p>
 
+    <!-- Echte Werbung: der Mensch hinter den Wölfen -->
+    <div class="pitch" id="pitch">
+      <p class="sig">{pitch.sig}</p>
+      <h2>{pitch.h2}</h2>
+      {pitch.body.map((p) => <p>{p}</p>)}
+      <h3>{pitch.howTitle}</h3>
+      <ul>{pitch.how.map((h) => <li>{h}</li>)}</ul>
+      <a class="pitch-cta" href="https://lupusmalus.dev">{pitch.cta}</a>
+      <p class="pitch-small">{pitch.small}</p>
+    </div>
+
     <footer class="t-foot">
-      <p>{t.foot[0]}</p>
-      <p>{t.foot[1]} <span class="r">♥</span> <b>/dev/wolves</b> · {t.foot[2]} <a href="https://lupusmalus.dev">lupusmalusdeviant</a> {t.foot[3]}</p>
-      <p><a href="#top" id="restore">{t.foot[4]}</a> · <a href="#top">{t.foot[5]}</a></p>
+      <p>{foot[0]}</p>
+      <p>{foot[1]} <span class="r">♥</span> <b>/dev/wolves</b> · {foot[2]} <a href="https://lupusmalus.dev">lupusmalusdeviant</a> {foot[3]}</p>
+      <p><a href="#top" id="restore">{foot[4]}</a> · <a href="#top">{foot[5]}</a></p>
     </footer>
   </div>
 </section>
@@ -55,7 +66,7 @@ const [b0, b1, b2, b3, b4] = t.body;
   .sig { color: #6fae84; font-size: 12.5px; letter-spacing: .06em; }
   .sig b, .t-foot b { color: #fff; }
   .r { color: #ff3b5c; }
-  .takeover h2 { font-family: var(--mono); color: #39ff88; font-size: clamp(30px, 6vw, 46px); letter-spacing: -0.02em; margin: 18px 0 26px; }
+  .takeover h2 { font-family: var(--mono); color: #39ff88; font-size: clamp(28px, 6vw, 46px); letter-spacing: -0.02em; margin: 18px 0 26px; }
   .takeover h3 { font-family: var(--mono); color: #39ff88; font-size: 15px; margin: 56px 0 14px; }
   .t-lead { font-size: 18px; color: #fff; }
   .takeover em { color: #39ff88; font-style: normal; }
@@ -84,6 +95,24 @@ const [b0, b1, b2, b3, b4] = t.body;
   .closing { font-size: clamp(26px, 5vw, 38px); font-weight: 700; color: #fff; margin: 64px 0 0; letter-spacing: -0.02em; }
   .hl { background: #39ff88; color: #070a08; padding: 0 8px; }
 
+  .pitch {
+    margin-top: 110px; padding: 34px 30px; border: 1px solid #39ff88; border-radius: 14px;
+    background: linear-gradient(160deg, rgba(57,255,136,.08), rgba(57,255,136,0) 60%);
+    font-family: var(--sans); font-size: 17px; color: #e6fff0;
+  }
+  .pitch .sig { font-family: var(--mono); margin: 0; }
+  .pitch h2 { font-family: var(--sans); color: #fff; font-weight: 800; font-size: clamp(26px, 5vw, 36px); margin: 14px 0 20px; }
+  .pitch h3 { font-family: var(--mono); margin: 30px 0 10px; }
+  .pitch ul { padding: 0; margin: 0 0 30px; list-style: none; }
+  .pitch li { padding: 6px 0 6px 26px; position: relative; }
+  .pitch li::before { content: '▸'; position: absolute; left: 4px; color: #39ff88; }
+  .pitch-cta {
+    display: inline-block; background: #39ff88; color: #070a08; font: 700 17px var(--mono);
+    padding: 14px 24px; border-radius: 8px; text-decoration: none; transition: transform .15s;
+  }
+  .pitch-cta:hover { transform: translateY(-2px); }
+  .pitch-small { font-family: var(--mono); font-size: 13px; color: #6fae84; margin: 14px 0 0; }
+
   .t-foot { margin-top: 80px; padding-top: 24px; border-top: 1px solid #1d3a26; font-size: 13px; color: #6fae84; }
   .t-foot p { margin: 4px 0; }
   .t-foot a { color: #39ff88; }
@@ -93,11 +122,12 @@ const [b0, b1, b2, b3, b4] = t.body;
     .vs-head span:last-child { display: none; }
     .vs-row .b { border-left: 0; border-top: 1px dashed #1d3a26; }
     .vs-row .b::before { content: '→ '; color: #39ff88; }
+    .pitch { padding: 26px 20px; }
   }
 </style>
 
 <script>
-  // "Kontext wiederherstellen" = die komprimierte Seite neu laden.
+  // "Kontext wiederherstellen" = die komprimierte Seite neu laden, oben beginnend.
   document.getElementById('restore')?.addEventListener('click', (e) => {
     e.preventDefault();
     history.scrollRestoration = 'manual';
