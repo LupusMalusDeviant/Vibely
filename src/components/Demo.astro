@@ -1,0 +1,67 @@
+---
+// "Live-Demo": ein Agent fixt einen Tippfehler. Startet, sobald sichtbar.
+---
+<section id="demo">
+  <div class="wrap center">
+    <p class="eyebrow">Vibely Autonomy™</p>
+    <h2>See it in action.</h2>
+    <p class="lead">Ein Prompt. Ein Agent. Null Fragen.</p>
+    <div class="demo-win">
+      <div class="demo-bar"><span></span><span></span><span></span><em>vibely-agent — prod</em></div>
+      <pre id="demo-out" aria-live="off"></pre>
+      <span class="demo-mark">VIBELY AUTONOMY™</span>
+    </div>
+    <p class="fine">Demo footage. Real customer repo.</p>
+  </div>
+</section>
+
+<style>
+  .demo-win {
+    margin-top: 40px; text-align: left; background: #111017; color: #e9e6f3; border-radius: 18px;
+    box-shadow: 0 30px 60px -30px rgba(30, 10, 80, .55); overflow: hidden; position: relative;
+  }
+  .demo-bar { display: flex; gap: 6px; align-items: center; padding: 12px 14px; border-bottom: 1px solid #262333; }
+  .demo-bar span { width: 10px; height: 10px; border-radius: 50%; background: #3a3648; }
+  .demo-bar em { font: 12px var(--mono); font-style: normal; color: #8b86a0; margin-left: 8px; }
+  pre { margin: 0; padding: 18px; font: 13px/1.6 var(--mono); min-height: 320px; white-space: pre-wrap; }
+  pre :global(.dim) { color: #8b86a0; }
+  pre :global(.ok) { color: #59e39b; }
+  pre :global(.warn) { color: #ffcc66; }
+  pre :global(.bad) { color: #ff6b81; }
+  .demo-mark { position: absolute; right: 16px; bottom: 12px; font: 700 11px var(--mono); color: #4a4560; letter-spacing: .1em; filter: blur(.4px); }
+</style>
+
+<script>
+  const out = document.getElementById('demo-out')!;
+  const lines: Array<[string, string]> = [
+    ['> Task: "fix typo in README"', ''],
+    ['  Analyzing codebase…', 'dim'],
+    ['  Found 1 typo. Found 1 opportunity.', 'dim'],
+    ['  Rewriting backend in Rust for memory safety…', 'warn'],
+    ['  Migrating PostgreSQL → blockchain (decentralized typo storage)…', 'warn'],
+    ['  Table "users" looks unused. Dropping…', 'bad'],
+    ['  Running tests… 0 failed (0 run)', 'ok'],
+    ['  Approving own PR… approved by vibely-agent-2', 'ok'],
+    ['  Force-pushing to main…', 'bad'],
+    ['  Posting win on LinkedIn: "Shipped 48.213 files before lunch 🚀 Agree?"', 'dim'],
+    ['✓ Typo fixed. 48.213 files changed, 1 insertion(+), 4.1M deletions(-)', 'ok'],
+  ];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const html = (t: string, c: string) => `<span class="${c}">${t.replace(/</g, '&lt;')}</span>`;
+
+  let started = false;
+  const run = () => {
+    if (started) return;
+    started = true;
+    if (reduce) { out.innerHTML = lines.map(([t, c]) => html(t, c)).join('\n'); return; }
+    let i = 0;
+    const next = () => {
+      if (i >= lines.length) return;
+      out.innerHTML += (i ? '\n' : '') + html(lines[i][0], lines[i][1]);
+      i++;
+      setTimeout(next, 650 + Math.random() * 600);
+    };
+    next();
+  };
+  new IntersectionObserver(([e]) => e.isIntersecting && run(), { threshold: 0.4 }).observe(out);
+</script>

@@ -1,0 +1,116 @@
+---
+// Der ernste Twist: /dev/wolves übernimmt die Seite – nicht um zu zerstören, sondern um zu reviewen.
+const rows: Array<[string, string]> = [
+  ['„Mach mal Login, aber geil.“', 'Spec mit Akzeptanzkriterien, Constraints und Non-Goals'],
+  ['Tests? Later.', 'Test zuerst – und einmal rot gesehen, bevor Grün zählt'],
+  ['Agent approved Agent', 'Ein Mensch liest den Diff. Ein Mensch merged.'],
+  ['Prod-Passwort im Prompt', 'Least Privilege, Sandbox, Secrets bleiben draußen'],
+  ['48.213 files changed', 'Kleine, reviewbare Commits mit klarer Message'],
+  ['„Works on my machine“', 'CI, Monitoring, Rollback-Plan'],
+  ['Kontext? Steht im Chatverlauf von letzter Woche.', 'Kontext als Artefakt: CLAUDE.md, ADRs, Lessons Learned'],
+  ['Der Agent hat’s gesagt.', 'Gemessen, nicht geglaubt'],
+];
+---
+<section id="takeover" class="takeover">
+  <div class="wrap">
+    <p class="sig"><span class="r">//</span> SIGNAL INTERRUPTED — <b>/dev/wolves</b> has the con</p>
+
+    <h2 class="glitch" data-text="Okay. Kurz ernst.">Okay. Kurz ernst.</h2>
+
+    <p class="t-lead">
+      Wir haben diese Seite übernommen. Nicht um sie kaputtzumachen – das hat der Agent schon erledigt.
+      Sondern für ein Code Review.
+    </p>
+    <p>
+      Vibely ist Satire. Die Tools dahinter sind es nicht. Coding Agents sind das mächtigste Werkzeug,
+      das unser Handwerk seit Jahren bekommen hat. Genau deshalb ist der Unterschied zwischen
+      <em>Vibe Coding</em> und <em>Agentic Engineering</em> kein Detail, sondern der ganze Job.
+    </p>
+
+    <div class="vs" role="table" aria-label="Vibe Coding im Vergleich zu Agentic Engineering">
+      <div class="vs-head" role="row">
+        <span role="columnheader">vibe coding</span>
+        <span role="columnheader">agentic engineering</span>
+      </div>
+      {rows.map(([a, b]) => (
+        <div class="vs-row" role="row">
+          <span role="cell" class="a">{a}</span>
+          <span role="cell" class="b">{b}</span>
+        </div>
+      ))}
+    </div>
+
+    <h3>$ cat /pack/principles.md</h3>
+    <ol class="principles">
+      <li><b>Der Agent tippt. Du verantwortest.</b> Wer den Merge-Button drückt, hat den Code gelesen.</li>
+      <li><b>Speed ist ein Ergebnis, kein Ziel.</b> Schnell wird, wer nicht dreimal dasselbe fixt.</li>
+      <li><b>Guardrails vor Autonomie.</b> Erst Tests, Reviews und Rechte – dann die lange Leine.</li>
+      <li><b>Kontext ist Infrastruktur.</b> Was der Agent wissen muss, gehört ins Repo, nicht in deinen Kopf.</li>
+      <li><b>Lernen ist ein Commit.</b> Jeder Fehler wird zur Regel, sonst wiederholt er sich – auch beim Agent.</li>
+    </ol>
+
+    <p class="closing">Ship fast. <span class="hl">Read the diff.</span></p>
+
+    <footer class="t-foot">
+      <p>© 2026 Vibely Inc. · Vibely ist eine fiktive Firma. Hoffentlich.</p>
+      <p>defaced with <span class="r">♥</span> by <b>/dev/wolves</b> · a <a href="https://lupusmalus.dev">lupusmalusdeviant</a> production</p>
+      <p><a href="#top">↑ back to top</a></p>
+    </footer>
+  </div>
+</section>
+
+<style>
+  .takeover {
+    background: #070a08; color: #c9f5d6; font-family: var(--mono); font-size: 15px; line-height: 1.7;
+    padding: 120px 0 80px; position: relative; overflow: hidden;
+  }
+  .takeover::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(57,255,136,.035) 0 1px, transparent 1px 3px);
+  }
+  .takeover .wrap { position: relative; }
+  .sig { color: #6fae84; font-size: 12.5px; letter-spacing: .06em; }
+  .sig b, .t-foot b { color: #fff; }
+  .r { color: #ff3b5c; }
+  .takeover h2 { font-family: var(--mono); color: #39ff88; font-size: clamp(30px, 6vw, 46px); letter-spacing: -0.02em; margin: 18px 0 26px; }
+  .takeover h3 { font-family: var(--mono); color: #39ff88; font-size: 15px; margin: 56px 0 14px; }
+  .t-lead { font-size: 18px; color: #fff; }
+  .takeover em { color: #39ff88; font-style: normal; }
+
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+  }
+  .glitch::before { color: #ff3b5c; animation: g1 3.2s infinite steps(1); clip-path: inset(0 0 60% 0); }
+  .glitch::after { color: #4ad6ff; animation: g2 2.7s infinite steps(1); clip-path: inset(55% 0 0 0); }
+  @keyframes g1 { 0%, 92% { transform: none; opacity: 0; } 93% { transform: translate(-3px, -1px); opacity: .8; } 96% { transform: translate(2px, 1px); opacity: .8; } }
+  @keyframes g2 { 0%, 90% { transform: none; opacity: 0; } 91% { transform: translate(3px, 1px); opacity: .8; } 95% { transform: translate(-2px, 0); opacity: .8; } }
+  @media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } }
+
+  .vs { margin-top: 40px; border: 1px solid #1d3a26; border-radius: 10px; overflow: hidden; }
+  .vs-head, .vs-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .vs-head span { padding: 10px 16px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; background: #0f1912; }
+  .vs-head span:first-child { color: #ff6b81; }
+  .vs-head span:last-child { color: #39ff88; }
+  .vs-row span { padding: 12px 16px; border-top: 1px solid #1d3a26; font-size: 14px; }
+  .vs-row .a { color: #8a9a8f; text-decoration: line-through; text-decoration-color: rgba(255,59,92,.6); }
+  .vs-row .b { color: #e6fff0; border-left: 1px solid #1d3a26; }
+
+  .principles { padding-left: 22px; margin: 0; }
+  .principles li { margin: 0 0 12px; }
+  .principles b { color: #fff; }
+
+  .closing { font-size: clamp(26px, 5vw, 38px); font-weight: 700; color: #fff; margin: 64px 0 0; letter-spacing: -0.02em; }
+  .hl { background: #39ff88; color: #070a08; padding: 0 8px; }
+
+  .t-foot { margin-top: 80px; padding-top: 24px; border-top: 1px solid #1d3a26; font-size: 13px; color: #6fae84; }
+  .t-foot p { margin: 4px 0; }
+  .t-foot a { color: #39ff88; }
+
+  @media (max-width: 560px) {
+    .vs-head, .vs-row { grid-template-columns: 1fr; }
+    .vs-head span:last-child { display: none; }
+    .vs-row .b { border-left: 0; border-top: 1px dashed #1d3a26; }
+    .vs-row .b::before { content: '→ '; color: #39ff88; }
+  }
+</style>
