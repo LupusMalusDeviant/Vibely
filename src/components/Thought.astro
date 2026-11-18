@@ -1,0 +1,20 @@
+---
+// Aufklappbares "Nachdenken" des Verkaufs-Agents – wie bei einem KI-Chat.
+// Wer es öffnet, wird in der Zusammenfassung am Ende erwähnt.
+interface Props { label: string; text: string }
+const { label, text } = Astro.props;
+---
+<details class="thought">
+  <summary><span aria-hidden="true">✻</span> {label}</summary>
+  <p>{text}</p>
+</details>
+
+<style>
+  .thought { margin: 22px auto 0; max-width: 560px; text-align: left; font-size: 14px; color: var(--muted); }
+  .thought summary { cursor: pointer; list-style: none; display: inline-flex; gap: 6px; align-items: center; font-weight: 500; }
+  .thought summary::-webkit-details-marker { display: none; }
+  .thought summary::after { content: '›'; transition: transform .2s; }
+  .thought[open] summary::after { transform: rotate(90deg); }
+  .thought summary span { color: var(--brand); }
+  .thought p { margin: 8px 0 0; padding-left: 14px; border-left: 2px solid var(--line); font-style: italic; }
+</style>

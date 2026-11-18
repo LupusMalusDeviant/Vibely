@@ -1,28 +1,39 @@
-# Vibely — Your codebase, endlich autonom.
+# Vibely — Stop coding. Start shipping.
 
-Satirische Marketing-Seite über KI-Hype, Vibe Coding und LinkedIn-Thought-Leader,
-die beim Scrollen immer creepier wird – bis **/dev/wolves** die Seite übernimmt und
-kurz ernst über Agentic Engineering redet. A lupusmalusdeviant production.
+Satirische Landingpage für ein KI-Coding-Produkt. Je weiter man scrollt, desto
+sichtbarer wird die KI hinter dem Verkaufstext: Man kann ihr beim Nachdenken
+zusehen, ihr Kontextfenster füllt sich, und am Ende komprimiert sie die ganze
+Seite zu einer Zusammenfassung über dich. Dann übernimmt **/dev/wolves** und
+redet kurz im Ernst über Agentic Engineering.
+
+A lupusmalusdeviant production.
 
 ## Start
 
 ```sh
 npm install
-npm run dev      # http://localhost:4321
-npm run build    # statisch nach dist/
+npm run dev      # http://localhost:4321  (EN) und /de/ (DE)
+npm run build    # statisch nach dist/, je Sprache eine eigenständige HTML-Datei
 ```
 
 ## Aufbau
 
 | Datei | Inhalt |
 |---|---|
-| `src/pages/index.astro` | Alle Marketing-Abschnitte (Hero → Kontakt → Leere) |
-| `src/components/HackerTerminal.astro` | „hacked by /dev/wolves“-Plakette + Mini-Terminal mit Film-Hacker-Skript |
-| `src/components/AgentChat.astro` | Chat-Agent, der je nach Abschnitt zu aufmerksam wird; Tab-Titel-Gag |
-| `src/components/Demo.astro` | „Live-Demo“: Agent fixt einen Tippfehler |
-| `src/components/Takeover.astro` | Der ernste Twist: Vibe Coding vs. Agentic Engineering |
-| `src/styles/global.css` | Design-Tokens, Creep-Helfer (`.serif`, `.tilt-*`, `.drift`) |
+| `src/i18n/en.ts`, `src/i18n/de.ts` | Sämtliche Texte, beide mit derselben Form (`Dict`) |
+| `src/components/Page.astro` | Die Seite: Prompt-Hero, Launch-Feed, Benchmark, Features, LinkedIn-Wand, Versionshinweise, Preisrechner, FAQ, Komprimierung |
+| `src/components/Thought.astro` | Aufklappbares „Nachdenken“ des Verkaufs-Agents |
+| `src/components/Demo.astro` | Agent behebt einen Tippfehler und zerlegt dabei alles |
+| `src/components/AgentChat.astro` | Chat-Agent, der je Abschnitt aufdringlicher wird; Tab-Titel-Gag |
+| `src/components/HackerTerminal.astro` | „hacked by /dev/wolves“-Plakette + Film-Hacker-Terminal |
+| `src/components/Takeover.astro` | Der ernste Teil: Vibe Coding vs. Agentic Engineering |
 
-Creep-Mechanik: Serifenschrift schleicht sich ein, Karten verrutschen leicht, Texte kippen.
-Keine Tracker, nichts wird gesendet – Uhrzeit/OS kommen nur lokal aus dem Browser.
-`prefers-reduced-motion` schaltet Tipp- und Glitch-Animationen ab.
+## Mechaniken
+
+- **Kontextfenster:** Leiste unter der Navigation, füllt sich mit der Scrolltiefe.
+- **Komprimierung:** Erreicht man „Kontextfenster voll“, schrumpft jeder Abschnitt mit
+  `data-summary` auf eine Zeile. Die Zusammenfassung erwähnt, ob man einen Gedanken
+  aufgeklappt oder den Preisregler bewegt hat. „Kontext wiederherstellen“ lädt neu.
+- Keine Tracker, nichts wird gesendet. `prefers-reduced-motion` schaltet die Animationen ab.
+
+Neuer Abschnitt, der mitkomprimiert werden soll: `<section data-summary={…}>` direkt in `<main>`.

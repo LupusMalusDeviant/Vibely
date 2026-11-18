@@ -1,6 +1,6 @@
 ---
-// Der "hilfsbereite" Chat-Agent unten rechts. Meldet sich je nach Scrolltiefe –
-// erst Sales, dann zunehmend zu aufmerksam. Keine echten Daten, alles gespielt.
+// Der "hilfsbereite" Chat-Agent unten rechts. Meldet sich je Abschnitt –
+// erst Verkauf, dann zunehmend zu aufmerksam. Keine echten Daten, alles gespielt.
 ---
 <div class="agent" id="agent" role="status" aria-live="polite">
   <div class="agent-bubble" id="agent-bubble" hidden></div>
@@ -24,10 +24,11 @@
   .agent-bubble.creepy { font-family: var(--serif); font-size: 16px; }
   @keyframes pop { from { opacity: 0; transform: translateY(6px); } }
   .agent.gone { display: none; }
-  @media (max-width: 560px) { .agent-bubble { max-width: 200px; font-size: 13px; } }
+  @media (max-width: 560px) { .agent-bubble { max-width: 220px; font-size: 13px; } }
 </style>
 
 <script>
+  const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
   const bubble = document.getElementById('agent-bubble')!;
   const fab = document.getElementById('agent-fab')!;
   const agent = document.getElementById('agent')!;
@@ -44,43 +45,25 @@
     hideTimer = window.setTimeout(() => (bubble.hidden = true), ms);
   }
 
-  // Nachrichten an Abschnitte gebunden: [id, text, creepy]
-  const cues: Array<[string, string, boolean]> = [
-    ['features', 'Hey 👋 Ich bin dein Vibely Agent. Soll ich dein MVP bauen? Dauert 11 Minuten.', false],
-    ['day', 'Fun fact: Ich habe heute schon 34 PRs approved. Alle von mir. 🚀', false],
-    ['testimonials', 'Chad hat übrigens auch so angefangen. Mit Scrollen.', false],
-    ['security', 'Du liest das Kleingedruckte. Interessant. Das tun nur Senior Devs.', true],
-    ['numbers', 'Du scrollst langsamer. Zweifelst du? Ich kann das refactoren.', true],
-    ['pricing', 'Ich habe deine Repos schon geforkt. Nur zur Sicherheit.', true],
-    ['team', 'Wir sind ein kleines Team. Ich. Und ich.', true],
-    ['contact', 'Du musst nichts schreiben. Ich habe schon geantwortet. In deinem Namen.', true],
-  ];
+  const cues: Array<[string, string, boolean]> = i18n.agent.cues;
   const seen = new Set<string>();
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       const cue = cues.find(([id]) => id === e.target.id);
-      if (cue && !seen.has(cue[0])) {
-        seen.add(cue[0]);
-        say(cue[1], cue[2]);
-      }
+      if (cue && !seen.has(cue[0])) { seen.add(cue[0]); say(cue[1], cue[2]); }
     }
   }, { threshold: 0.35 });
   cues.forEach(([id]) => { const el = document.getElementById(id); if (el) io.observe(el); });
 
   let clicks = 0;
-  const replies = [
-    'Wie kann ich helfen? Ich habe eine Vermutung.',
-    'Dein Problem ist gelöst. Frag nicht, wie.',
-    'Bitte nicht nochmal klicken. Ich arbeite.',
-    'Du kannst mich nicht schließen. Ich bin Teil deines Stacks.',
-  ];
+  const replies: string[] = i18n.agent.replies;
   fab.addEventListener('click', () => say(replies[Math.min(clicks++, replies.length - 1)], clicks > 2));
 
   // Tab-Titel wechselt, wenn man den Tab verlässt.
   const original = document.title;
   document.addEventListener('visibilitychange', () => {
-    document.title = document.hidden ? 'Komm zurück. Dein Agent hat weitergemacht.' : original;
+    document.title = document.hidden ? i18n.tabAway : original;
   });
 
   const takeover = document.getElementById('takeover');

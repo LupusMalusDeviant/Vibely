@@ -1,16 +1,18 @@
 ---
-// Kleines Hollywood-Hacker-Terminal unten links plus Defacement-Plakette oben.
-// Sichtbar, aber nicht dominant. Respektiert prefers-reduced-motion.
+// Hollywood-Hacker-Terminal unten links plus Defacement-Plakette oben.
+// Sichtbar, aber nicht dominant. Texte kommen aus dem i18n-JSON der Seite.
+interface Props { badge: string; pwned: string }
+const { badge, pwned } = Astro.props;
 ---
-<a class="defaced" href="#takeover" aria-label="Diese Website wurde von /dev/wolves gehackt – zum Ende springen">
-  <span class="blink" aria-hidden="true">●</span> this website got hacked by <b>/dev/wolves</b>
+<a class="defaced" href="#takeover">
+  <span class="blink" aria-hidden="true">●</span> {badge} <b>/dev/wolves</b>
 </a>
 
 <aside class="hterm" id="hterm" aria-hidden="true">
   <div class="hterm-bar">
     <span></span><span></span><span></span>
-    <em>wolf@pack:~ <span class="pwn">· pwned by /dev/wolves</span></em>
-    <button type="button" class="hterm-min" title="minimieren">_</button>
+    <em>wolf@pack:~ <span class="pwn">· {pwned} /dev/wolves</span></em>
+    <button type="button" class="hterm-min" tabindex="-1">_</button>
   </div>
   <pre class="hterm-out" id="hterm-out"></pre>
 </aside>
@@ -37,16 +39,16 @@
   .hterm.min .hterm-out { display: none; }
   .hterm.gone { opacity: 0; transform: translateY(20px); pointer-events: none; }
   .hterm-bar { display: flex; align-items: center; gap: 5px; padding: 6px 8px; border-bottom: 1px solid #1d3a26; }
-  .hterm-bar span { width: 8px; height: 8px; border-radius: 50%; background: #2c4a35; }
+  .hterm-bar > span { width: 8px; height: 8px; border-radius: 50%; background: #2c4a35; flex: none; }
   .hterm-bar em { font-style: normal; color: #6fae84; margin-left: 6px; flex: 1; }
   .hterm-min { background: none; border: 0; color: #6fae84; font: inherit; cursor: pointer; padding: 0 4px; }
-  .hterm-out { margin: 0; padding: 8px 10px; height: 124px; overflow: hidden; white-space: pre-wrap; word-break: break-all; }
+  .hterm-out { margin: 0; padding: 8px 10px; height: 124px; overflow: hidden; white-space: pre-wrap; word-break: break-word; }
   .hterm-out :global(.r) { color: #ff3b5c; }
   .hterm-out :global(.w) { color: #fff; }
-
   .pwn { display: none; color: #fff; }
+
   @media (max-width: 560px) {
-    .hterm { width: 230px; font-size: 10px; }
+    .hterm { width: 240px; font-size: 10px; }
     .hterm-out { height: 86px; }
     .defaced { display: none; }
     .pwn { display: inline; }
@@ -54,6 +56,7 @@
 </style>
 
 <script>
+  const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
   const out = document.getElementById('hterm-out')!;
   const term = document.getElementById('hterm')!;
   term.querySelector('.hterm-min')!.addEventListener('click', () => term.classList.toggle('min'));
@@ -61,59 +64,28 @@
   if (window.matchMedia('(max-width: 560px)').matches) term.classList.add('min');
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   const bar = (p: number) => '[' + '█'.repeat(Math.round(p / 10)) + '░'.repeat(10 - Math.round(p / 10)) + '] ' + p + '%';
+  const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 
-  // Klassische Film-Hacker-Phrasen. Jede Zeile: [text, klasse?]
-  const script: Array<[string, string?]> = [
-    ['$ ssh root@mainframe.vibely.io'],
-    ['> bypassing firewall... ' + bar(73)],
-    ['> firewall bypassed. it was a sticker.', 'w'],
-    ['$ ./decrypt --bits 2048 --hype max'],
-    ['> decrypting pitch deck... ' + bar(100)],
-    ['> found: 0 lines of tests', 'r'],
-    ['$ hack --the-gibson'],
-    ['> ACCESS GRANTED', 'w'],
-    ['$ cat /etc/linkedin/thought_leaders'],
-    ['> 12.000 founders. 0 code reviews.'],
-    ['$ enhance'],
-    ['$ enhance'],
-    ['$ ENHANCE', 'w'],
-    ['> rerouting through 7 proxies (+1 VPN, for vibes)'],
-    ['$ grep -r "TODO: security" ./src | wc -l'],
-    ['> 4128', 'r'],
-    ['$ inject TRUTH.exe'],
-    ['> uploading payload ' + bar(42)],
-    ['> two people typing on one keyboard...'],
-    ['> I\'m in.', 'w'],
-    ['$ echo "scroll to the end, human"'],
-  ];
+  const script: Array<[string, string?]> = i18n.hacker.map(([t, c]: [string, string?]) =>
+    [t.replace(/%BAR(\d+)%/, (_: string, p: string) => bar(Number(p))), c]);
 
-  let i = 0;
   const lines: string[] = [];
-
-  function render() {
-    out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>';
-  }
-
-  function pushLine(text: string, cls?: string) {
-    const safe = text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
-    lines.push(cls ? `<span class="${cls}">${safe}</span>` : safe);
-    render();
-  }
+  const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; };
+  const wrap = (t: string, c?: string) => (c ? `<span class="${c}">${esc(t)}</span>` : esc(t));
 
   if (reduce) {
-    script.slice(0, 8).forEach(([t, c]) => pushLine(t, c));
+    script.slice(0, 8).forEach(([t, c]) => lines.push(wrap(t, c)));
+    render();
   } else {
+    let i = 0;
     const typeNext = () => {
-      const [text, cls] = script[i % script.length];
-      i++;
+      const [text, cls] = script[i++ % script.length];
       let n = 0;
       lines.push('');
       const tick = () => {
         n += 1 + Math.floor(Math.random() * 3);
-        const part = text.slice(0, n).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
-        lines[lines.length - 1] = cls ? `<span class="${cls}">${part}</span>` : part;
+        lines[lines.length - 1] = wrap(text.slice(0, n), cls);
         render();
         if (n < text.length) setTimeout(tick, 18 + Math.random() * 40);
         else setTimeout(typeNext, text.startsWith('$') ? 500 : 1100 + Math.random() * 900);
@@ -123,10 +95,12 @@
     setTimeout(typeNext, 1800);
   }
 
-  // Im Übernahme-Abschnitt braucht es das Mini-Terminal nicht mehr: dort IST alles Terminal.
+  // Im Übernahme-Abschnitt ist alles Terminal: Mini-Terminal weg, Navigation "gehackt".
   const takeover = document.getElementById('takeover');
   if (takeover) {
-    new IntersectionObserver(([e]) => term.classList.toggle('gone', e.isIntersecting), { threshold: 0.05 }).observe(takeover);
-    new IntersectionObserver(([e]) => document.body.classList.toggle('pwned', e.isIntersecting), { threshold: 0.05 }).observe(takeover);
+    new IntersectionObserver(([e]) => {
+      term.classList.toggle('gone', e.isIntersecting);
+      document.body.classList.toggle('pwned', e.isIntersecting);
+    }, { threshold: 0.05 }).observe(takeover);
   }
 </script>

@@ -1,38 +1,25 @@
 ---
 // Der ernste Twist: /dev/wolves übernimmt die Seite – nicht um zu zerstören, sondern um zu reviewen.
-const rows: Array<[string, string]> = [
-  ['„Mach mal Login, aber geil.“', 'Spec mit Akzeptanzkriterien, Constraints und Non-Goals'],
-  ['Tests? Later.', 'Test zuerst – und einmal rot gesehen, bevor Grün zählt'],
-  ['Agent approved Agent', 'Ein Mensch liest den Diff. Ein Mensch merged.'],
-  ['Prod-Passwort im Prompt', 'Least Privilege, Sandbox, Secrets bleiben draußen'],
-  ['48.213 files changed', 'Kleine, reviewbare Commits mit klarer Message'],
-  ['„Works on my machine“', 'CI, Monitoring, Rollback-Plan'],
-  ['Kontext? Steht im Chatverlauf von letzter Woche.', 'Kontext als Artefakt: CLAUDE.md, ADRs, Lessons Learned'],
-  ['Der Agent hat’s gesagt.', 'Gemessen, nicht geglaubt'],
-];
+import type { Dict } from '../i18n/en';
+interface Props { t: Dict['takeover'] }
+const { t } = Astro.props;
+const [b0, b1, b2, b3, b4] = t.body;
 ---
 <section id="takeover" class="takeover">
   <div class="wrap">
-    <p class="sig"><span class="r">//</span> SIGNAL INTERRUPTED — <b>/dev/wolves</b> has the con</p>
+    <p class="sig"><span class="r">//</span> {t.sig[0]} — <b>/dev/wolves</b> {t.sig[1]}</p>
 
-    <h2 class="glitch" data-text="Okay. Kurz ernst.">Okay. Kurz ernst.</h2>
+    <h2 class="glitch" data-text={t.h2}>{t.h2}</h2>
 
-    <p class="t-lead">
-      Wir haben diese Seite übernommen. Nicht um sie kaputtzumachen – das hat der Agent schon erledigt.
-      Sondern für ein Code Review.
-    </p>
-    <p>
-      Vibely ist Satire. Die Tools dahinter sind es nicht. Coding Agents sind das mächtigste Werkzeug,
-      das unser Handwerk seit Jahren bekommen hat. Genau deshalb ist der Unterschied zwischen
-      <em>Vibe Coding</em> und <em>Agentic Engineering</em> kein Detail, sondern der ganze Job.
-    </p>
+    <p class="t-lead">{t.lead}</p>
+    <p>{b0}<em>{b1}</em>{b2}<em>{b3}</em>{b4}</p>
 
-    <div class="vs" role="table" aria-label="Vibe Coding im Vergleich zu Agentic Engineering">
+    <div class="vs" role="table" aria-label={`${t.head[0]} / ${t.head[1]}`}>
       <div class="vs-head" role="row">
-        <span role="columnheader">vibe coding</span>
-        <span role="columnheader">agentic engineering</span>
+        <span role="columnheader">{t.head[0]}</span>
+        <span role="columnheader">{t.head[1]}</span>
       </div>
-      {rows.map(([a, b]) => (
+      {t.rows.map(([a, b]) => (
         <div class="vs-row" role="row">
           <span role="cell" class="a">{a}</span>
           <span role="cell" class="b">{b}</span>
@@ -40,21 +27,17 @@ const rows: Array<[string, string]> = [
       ))}
     </div>
 
-    <h3>$ cat /pack/principles.md</h3>
+    <h3>{t.principlesTitle}</h3>
     <ol class="principles">
-      <li><b>Der Agent tippt. Du verantwortest.</b> Wer den Merge-Button drückt, hat den Code gelesen.</li>
-      <li><b>Speed ist ein Ergebnis, kein Ziel.</b> Schnell wird, wer nicht dreimal dasselbe fixt.</li>
-      <li><b>Guardrails vor Autonomie.</b> Erst Tests, Reviews und Rechte – dann die lange Leine.</li>
-      <li><b>Kontext ist Infrastruktur.</b> Was der Agent wissen muss, gehört ins Repo, nicht in deinen Kopf.</li>
-      <li><b>Lernen ist ein Commit.</b> Jeder Fehler wird zur Regel, sonst wiederholt er sich – auch beim Agent.</li>
+      {t.principles.map(([head, text]) => <li><b>{head}</b> {text}</li>)}
     </ol>
 
-    <p class="closing">Ship fast. <span class="hl">Read the diff.</span></p>
+    <p class="closing">{t.closing[0]} <span class="hl">{t.closing[1]}</span></p>
 
     <footer class="t-foot">
-      <p>© 2026 Vibely Inc. · Vibely ist eine fiktive Firma. Hoffentlich.</p>
-      <p>defaced with <span class="r">♥</span> by <b>/dev/wolves</b> · a <a href="https://lupusmalus.dev">lupusmalusdeviant</a> production</p>
-      <p><a href="#top">↑ back to top</a></p>
+      <p>{t.foot[0]}</p>
+      <p>{t.foot[1]} <span class="r">♥</span> <b>/dev/wolves</b> · {t.foot[2]} <a href="https://lupusmalus.dev">lupusmalusdeviant</a> {t.foot[3]}</p>
+      <p><a href="#top" id="restore">{t.foot[4]}</a> · <a href="#top">{t.foot[5]}</a></p>
     </footer>
   </div>
 </section>
@@ -78,9 +61,7 @@ const rows: Array<[string, string]> = [
   .takeover em { color: #39ff88; font-style: normal; }
 
   .glitch { position: relative; }
-  .glitch::before, .glitch::after {
-    content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
-  }
+  .glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; pointer-events: none; }
   .glitch::before { color: #ff3b5c; animation: g1 3.2s infinite steps(1); clip-path: inset(0 0 60% 0); }
   .glitch::after { color: #4ad6ff; animation: g2 2.7s infinite steps(1); clip-path: inset(55% 0 0 0); }
   @keyframes g1 { 0%, 92% { transform: none; opacity: 0; } 93% { transform: translate(-3px, -1px); opacity: .8; } 96% { transform: translate(2px, 1px); opacity: .8; } }
@@ -114,3 +95,12 @@ const rows: Array<[string, string]> = [
     .vs-row .b::before { content: '→ '; color: #39ff88; }
   }
 </style>
+
+<script>
+  // "Kontext wiederherstellen" = die komprimierte Seite neu laden.
+  document.getElementById('restore')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    history.scrollRestoration = 'manual';
+    location.reload();
+  });
+</script>
