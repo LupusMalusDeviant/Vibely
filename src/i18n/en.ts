@@ -3,8 +3,14 @@
 export const en = {
   lang: 'en',
   meta: {
-    title: 'Vibely — Stop coding. Start shipping.',
-    description: 'Describe your idea in one sentence. Vibely’s agents write, test and deploy it.',
+    // Suchmaschinen: sagen offen, was die Seite ist.
+    title: 'Vibely – a satire on vibe coding and AI hype',
+    description: 'Satirical landing page for a made-up AI coding tool: vibe coding, LinkedIn AI heroes, an agent whose context window overflows — and what agentic engineering does differently.',
+    // Link-Vorschau (LinkedIn & Co.): bleibt in der Rolle, damit die Pointe nicht vorweggenommen wird.
+    ogTitle: 'Vibely — Stop coding. Start shipping.',
+    ogDescription: 'Describe your idea in one sentence. Vibely’s agents write, test and deploy it.',
+    ogImageAlt: 'Vibely: Stop coding. Start shipping.',
+    locale: 'en_US',
   },
   nav: { cta: 'Start shipping', switchLabel: 'Deutsch', switchShort: 'DE' },
   thought: (s: number) => `Thought for ${s}s`,

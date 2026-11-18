@@ -5,8 +5,12 @@ import type { Dict } from './en';
 export const de: Dict = {
   lang: 'de',
   meta: {
-    title: 'Vibely — Schluss mit Coden. Ab jetzt wird geshippt.',
-    description: 'Beschreib deine Idee in einem Satz. Die Agents von Vibely schreiben, testen und veröffentlichen sie.',
+    title: 'Vibely – Satire auf Vibe Coding und KI-Hype',
+    description: 'Satirische Landingpage für ein erfundenes KI-Coding-Tool: Vibe Coding, KI-Helden auf LinkedIn, ein Agent mit vollem Kontextfenster – und was Agentic Engineering anders macht.',
+    ogTitle: 'Vibely — Schluss mit Coden. Ab jetzt wird geshippt.',
+    ogDescription: 'Beschreib deine Idee in einem Satz. Die Agents von Vibely schreiben, testen und veröffentlichen sie.',
+    ogImageAlt: 'Vibely: Schluss mit Coden. Ab jetzt wird geshippt.',
+    locale: 'de_DE',
   },
   nav: { cta: 'Jetzt starten', switchLabel: 'English', switchShort: 'EN' },
   thought: (s: number) => `${s} Sekunden nachgedacht`,

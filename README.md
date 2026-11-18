@@ -44,3 +44,16 @@ GitHub Pages über `.github/workflows/pages.yml`: Jeder Push auf `main` baut und
 Adresse und Basispfad liefert `actions/configure-pages` (als `SITE`/`BASE` an Astro), deshalb
 funktioniert dieselbe Konfiguration unter `…github.io/Vibely/` wie mit eigener Domain.
 Einmalig nötig: *Settings → Pages → Build and deployment → Source: GitHub Actions*.
+
+## Auffindbarkeit
+
+- **Suche** (`meta.title`, `meta.description`): sagt offen, dass es Satire ist, mit den Begriffen,
+  nach denen Leute suchen (Vibe Coding, Agentic Engineering, KI-Hype).
+- **Link-Vorschau** (`meta.ogTitle`, `meta.ogDescription`, `public/og-en.png`, `public/og-de.png`):
+  bleibt bewusst in der Rolle der Vibely-Werbung, damit LinkedIn & Co. die Pointe nicht verraten.
+- Kanonische Adressen, `hreflang` (en, de, x-default), JSON-LD (`WebPage`, Genre Satire) und
+  `sitemap.xml` entstehen beim Build aus `SITE`/`BASE`.
+- Unter `…github.io/Vibely/` gilt keine eigene `robots.txt` (die läge an der Domain-Wurzel). Deshalb die
+  Sitemap einmal in der Google Search Console einreichen: Property `https://lupusmalusdeviant.github.io/Vibely/`
+  anlegen (Bestätigung per HTML-Tag), dann `sitemap.xml` eintragen. Ein Link von lupusmalus.dev
+  hilft der Seite am meisten.
