@@ -38,7 +38,8 @@
   const stack = document.getElementById('agent-stack')!;
   const fab = document.getElementById('agent-fab')!;
   const agent = document.getElementById('agent')!;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Live abfragen: Die Einstellung kann sich ändern, während die Seite offen ist.
+  const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // Nachrichten werden nacheinander gezeigt und verschwinden nach einer Weile.
   let queue: Array<[string, string]> = [];
@@ -90,7 +91,7 @@
       if (window.scrollY < 600 || agent.classList.contains('gone')) return armIdle();
       saidIdle = true;
       say([[i18n.agent.idle, 'creepy']]);
-      if (!reduce) setTimeout(() => window.scrollBy({ top: 320, behavior: 'smooth' }), 2200);
+      setTimeout(() => { if (!reduceMq.matches) window.scrollBy({ top: 320, behavior: 'smooth' }); }, 2200);
     }, 9000);
   };
   window.addEventListener('scroll', armIdle, { passive: true });

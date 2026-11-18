@@ -59,7 +59,9 @@ const { badge, pwned } = Astro.props;
   const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
   const out = document.getElementById('hterm-out')!;
   const term = document.getElementById('hterm')!;
-  term.querySelector('.hterm-min')!.addEventListener('click', () => term.classList.toggle('min'));
+  const toLatest = () => { out.scrollTop = out.scrollHeight; };
+  // Beim Aufklappen war die Ausgabe versteckt und hatte keine Höhe: danach zur neuesten Zeile.
+  term.querySelector('.hterm-min')!.addEventListener('click', () => { term.classList.toggle('min'); toLatest(); });
   // Auf schmalen Schirmen startet das Terminal eingeklappt – sichtbar, aber nicht im Weg.
   if (window.matchMedia('(max-width: 560px)').matches) term.classList.add('min');
 
@@ -72,16 +74,26 @@ const { badge, pwned } = Astro.props;
   let script = prep(i18n.hacker);
   let i = 0;
   // Nach dem Hack: Angriffsmodus. Die Wölfe arbeiten jetzt sichtbar am Agent.
-  window.addEventListener('breach', () => { script = prep(i18n.hackerBreach); i = 0; if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min'); });
+  window.addEventListener('breach', () => {
+    script = prep(i18n.hackerBreach); i = 0;
+    if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min');
+    if (reduce) showStatic();
+    toLatest();
+  });
 
   const lines: string[] = [];
   // Umbrochene Zeilen sind höher als das Fenster: immer bis zur neuesten Zeile scrollen.
-  const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; out.scrollTop = out.scrollHeight; };
+  const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; toLatest(); };
   const wrap = (t: string, c?: string) => (c ? `<span class="${c}">${esc(t)}</span>` : esc(t));
-
-  if (reduce) {
+  // Reduzierte Bewegung: kein Tippen, sondern die ersten acht Zeilen des aktuellen Skripts auf einmal.
+  function showStatic() {
+    lines.length = 0;
     script.slice(0, 8).forEach(([t, c]) => lines.push(wrap(t, c)));
     render();
+  }
+
+  if (reduce) {
+    showStatic();
   } else {
     const typeNext = () => {
       const [text, cls] = script[i++ % script.length];

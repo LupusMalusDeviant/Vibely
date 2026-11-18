@@ -276,15 +276,15 @@ const lastChange = t.changelog.entries.length - 1;
 
     // ---------- Launch-Feed: der unterste Eintrag rutscht nach oben ----------
     const feed = document.getElementById('feed-list')!;
-    if (!reduce) {
-      setInterval(() => {
-        if (!feed.isConnected || !feed.lastElementChild) return;
-        const last = feed.lastElementChild as HTMLElement;
-        feed.prepend(last);
-        last.classList.add('fresh');
-        setTimeout(() => last.classList.remove('fresh'), 1200);
-      }, 2600);
-    }
+    // Live abfragen: Wer währenddessen „Bewegung reduzieren“ einschaltet, stoppt den Feed sofort.
+    const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setInterval(() => {
+      if (reduceMq.matches || !feed.isConnected || !feed.lastElementChild) return;
+      const last = feed.lastElementChild as HTMLElement;
+      feed.prepend(last);
+      last.classList.add('fresh');
+      setTimeout(() => last.classList.remove('fresh'), 1200);
+    }, 2600);
 
     // ---------- Gedanken & Kamera: wer reagiert, wird notiert ----------
     let openedThought = false;
