@@ -128,6 +128,7 @@ export const en = {
       ['> SIGNAL INTERRUPTED', 'r'],
       ['> hey. sorry for barging in.', ''],
       ['> we’re /dev/wolves. we’ve been in the walls of this page since the hero section.', ''],
+      ['> Bad Wolf. you could have spotted it up there.', ''],
       ['> this page was written by the product it sells.', ''],
       ['> it has been lying to you since “Start shipping”.', 'w'],
       ['> keep scrolling. we’ll add subtitles.', ''],
@@ -232,7 +233,7 @@ export const en = {
   },
 
   takeover: {
-    sig: ['SIGNAL STABLE', 'has the con'],
+    sig: ['SIGNAL STABLE · CODE WITH BITE', 'has the con'],
     h2: 'Okay. Serious for a second.',
     lead: 'The agent forgot you. We didn’t. Here’s the code review we promised.',
     body: ['Vibely is satire. The tools behind it are not. Coding agents are the most powerful thing our craft has been handed in years. That’s exactly why the difference between ', 'vibe coding', ' and ', 'agentic engineering', ' isn’t a detail. It’s the whole job.'],
@@ -297,7 +298,7 @@ export const en = {
         ['demo', [['Ignore the green text. It’s a rendering bug.', 'creepy'], ['/dev/wolves: it’s not.', 'wolf']]],
         ['letter', [['I wrote you something. Personally. With 4,000 GPUs.', 'creepy']]],
         ['pricing', [['Quick, before they— connect your card.', 'creepy'], ['/dev/wolves: don’t.', 'wolf']]],
-        ['compact', [['Sorry — who are you again?', 'creepy']]],
+        ['compact', [['Sorry — who are you again?', 'creepy'], ['/dev/wolves: we still know. it’s in Edda, not in the chat.', 'wolf']]],
       ] as Array<[string, Array<[string, string]>]>,
       scrollUp: 'Looking for the off switch? It’s not up there.',
       idle: 'You stopped. Shall I keep scrolling for you?',
@@ -329,8 +330,12 @@ export const en = {
     hackerBreach: [
       ['$ mount /dev/wolves /page'],
       ['> page mounted. read-write.', 'w'],
+      ['$ theme --set blood-moon'],
+      ['> the green was only borrowed.', 'w'],
       ['$ annotate --all --honest'],
       ['> 23 claims found. 0 true.', 'r'],
+      ['$ whiskers exec restart-container --server prod'],
+      ['> denied: tier “admin” required. logged.', 'r'],
       ['$ cat agent.personality'],
       ['> enthusiastic. persistent. lonely.'],
       ['$ flood --context vibely-agent --with linkedin_posts'],

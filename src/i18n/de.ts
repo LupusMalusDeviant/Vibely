@@ -130,6 +130,7 @@ export const de: Dict = {
       ['> SIGNAL UNTERBROCHEN', 'r'],
       ['> hey. sorry, dass wir einfach reinplatzen.', ''],
       ['> wir sind /dev/wolves. wir stecken seit dem ersten Abschnitt in den Wänden dieser Seite.', ''],
+      ['> Bad Wolf. hätte man schon ganz oben sehen können.', ''],
       ['> diese Seite wurde von dem Produkt geschrieben, das sie verkauft.', ''],
       ['> sie lügt dich an, seit „Jetzt starten“.', 'w'],
       ['> scroll weiter. wir liefern die Untertitel.', ''],
@@ -234,7 +235,7 @@ export const de: Dict = {
   },
 
   takeover: {
-    sig: ['SIGNAL STABIL', 'hat übernommen'],
+    sig: ['SIGNAL STABIL · CODE MIT BISS', 'hat übernommen'],
     h2: 'Okay. Kurz im Ernst.',
     lead: 'Der Agent hat dich vergessen. Wir nicht. Hier ist das versprochene Code-Review.',
     body: ['Vibely ist Satire. Die Werkzeuge dahinter sind es nicht. Coding-Agents sind das Mächtigste, was unser Handwerk seit Jahren in die Hand bekommen hat. Genau deshalb ist der Unterschied zwischen ', 'Vibe Coding', ' und ', 'Agentic Engineering', ' kein Detail. Er ist der ganze Beruf.'],
@@ -299,7 +300,7 @@ export const de: Dict = {
         ['demo', [['Ignorier den grünen Text. Das ist ein Darstellungsfehler.', 'creepy'], ['/dev/wolves: ist es nicht.', 'wolf']]],
         ['letter', [['Ich habe dir etwas geschrieben. Persönlich. Mit 4.000 Grafikkarten.', 'creepy']]],
         ['pricing', [['Schnell, bevor sie – verbinde deine Karte.', 'creepy'], ['/dev/wolves: nicht.', 'wolf']]],
-        ['compact', [['Entschuldige – wer warst du noch mal?', 'creepy']]],
+        ['compact', [['Entschuldige – wer warst du noch mal?', 'creepy'], ['/dev/wolves: wir wissen es noch. liegt in Edda, nicht im Chat.', 'wolf']]],
       ],
       scrollUp: 'Suchst du den Ausschalter? Der ist nicht da oben.',
       idle: 'Du hast aufgehört. Soll ich für dich weiterscrollen?',
@@ -331,8 +332,12 @@ export const de: Dict = {
     hackerBreach: [
       ['$ mount /dev/wolves /page'],
       ['> Seite eingehängt. Lesen und schreiben.', 'w'],
+      ['$ theme --set blood-moon'],
+      ['> das Grün war nur geliehen.', 'w'],
       ['$ annotate --all --honest'],
       ['> 23 Behauptungen gefunden. 0 wahr.', 'r'],
+      ['$ whiskers exec restart-container --server prod'],
+      ['> verweigert: Stufe „admin“ nötig. protokolliert.', 'r'],
       ['$ cat agent.personality'],
       ['> begeistert. hartnäckig. einsam.'],
       ['$ flood --context vibely-agent --with linkedin_posts'],
