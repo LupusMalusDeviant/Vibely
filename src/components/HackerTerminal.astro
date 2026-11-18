@@ -43,6 +43,7 @@ const { badge, pwned } = Astro.props;
   .hterm-bar em { font-style: normal; color: var(--wolf-dim); margin-left: 6px; flex: 1; }
   .hterm-min { background: none; border: 0; color: var(--wolf-dim); font: inherit; cursor: pointer; padding: 0 4px; }
   .hterm-out { margin: 0; padding: 8px 10px; height: 124px; overflow: hidden; white-space: pre-wrap; word-break: break-word; }
+  .hterm-out.static { overflow-y: auto; overscroll-behavior: contain; }
   .hterm-out :global(.r) { color: var(--wolf-accent); }
   .hterm-out :global(.w) { color: #fff; }
   .pwn { display: none; color: #fff; }
@@ -59,13 +60,15 @@ const { badge, pwned } = Astro.props;
   const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
   const out = document.getElementById('hterm-out')!;
   const term = document.getElementById('hterm')!;
-  const toLatest = () => { out.scrollTop = out.scrollHeight; };
+  // Im festen Modus (reduzierte Bewegung) beginnt man oben zu lesen und scrollt selbst.
+  const toLatest = () => { if (!out.classList.contains('static')) out.scrollTop = out.scrollHeight; };
   // Beim Aufklappen war die Ausgabe versteckt und hatte keine Höhe: danach zur neuesten Zeile.
   term.querySelector('.hterm-min')!.addEventListener('click', () => { term.classList.toggle('min'); toLatest(); });
   // Auf schmalen Schirmen startet das Terminal eingeklappt – sichtbar, aber nicht im Weg.
   if (window.matchMedia('(max-width: 560px)').matches) term.classList.add('min');
 
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Live verfolgen: Die Einstellung kann sich ändern, während die Seite offen ist.
+  const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
   const bar = (p: number) => '[' + '█'.repeat(Math.round(p / 10)) + '░'.repeat(10 - Math.round(p / 10)) + '] ' + p + '%';
   const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 
@@ -77,7 +80,7 @@ const { badge, pwned } = Astro.props;
   window.addEventListener('breach', () => {
     script = prep(i18n.hackerBreach); i = 0;
     if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min');
-    if (reduce) showStatic();
+    if (reduceMq.matches) showStatic();
     toLatest();
   });
 
@@ -85,16 +88,24 @@ const { badge, pwned } = Astro.props;
   // Umbrochene Zeilen sind höher als das Fenster: immer bis zur neuesten Zeile scrollen.
   const render = () => { out.innerHTML = lines.slice(-8).join('\n') + '<span class="w">▌</span>'; toLatest(); };
   const wrap = (t: string, c?: string) => (c ? `<span class="${c}">${esc(t)}</span>` : esc(t));
-  // Reduzierte Bewegung: kein Tippen, sondern die ersten acht Zeilen des aktuellen Skripts auf einmal.
+
+  // Jeder Start des Tippens bekommt eine Nummer. Ändert sich der Modus, laufen alte Zeitgeber ins Leere.
+  let run = 0;
+  let timer: number | undefined;
+  const later = (fn: () => void, ms: number, id: number) => { timer = window.setTimeout(() => { if (id === run) fn(); }, ms); };
+
+  // Reduzierte Bewegung: kein Tippen, sondern das ganze aktuelle Skript auf einmal, im Fenster scrollbar.
   function showStatic() {
-    lines.length = 0;
-    script.slice(0, 8).forEach(([t, c]) => lines.push(wrap(t, c)));
-    render();
+    run++; clearTimeout(timer);
+    out.classList.add('static');
+    out.innerHTML = script.map(([t, c]) => wrap(t, c)).join('\n');
+    out.scrollTop = 0;
   }
 
-  if (reduce) {
-    showStatic();
-  } else {
+  function startTyping(delay: number) {
+    const id = ++run; clearTimeout(timer);
+    out.classList.remove('static');
+    lines.length = 0;
     const typeNext = () => {
       const [text, cls] = script[i++ % script.length];
       let n = 0;
@@ -103,13 +114,16 @@ const { badge, pwned } = Astro.props;
         n += 1 + Math.floor(Math.random() * 3);
         lines[lines.length - 1] = wrap(text.slice(0, n), cls);
         render();
-        if (n < text.length) setTimeout(tick, 18 + Math.random() * 40);
-        else setTimeout(typeNext, text.startsWith('$') ? 500 : 1100 + Math.random() * 900);
+        if (n < text.length) later(tick, 18 + Math.random() * 40, id);
+        else later(typeNext, text.startsWith('$') ? 500 : 1100 + Math.random() * 900, id);
       };
       tick();
     };
-    setTimeout(typeNext, 1800);
+    later(typeNext, delay, id);
   }
+
+  if (reduceMq.matches) showStatic(); else startTyping(1800);
+  reduceMq.addEventListener('change', () => (reduceMq.matches ? showStatic() : startTyping(300)));
 
   // Im Übernahme-Abschnitt ist alles Terminal: Mini-Terminal weg, Navigation "gehackt".
   const takeover = document.getElementById('takeover');
