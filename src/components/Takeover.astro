@@ -41,7 +41,7 @@ const [b0, b1, b2, b3, b4] = t.body;
       {pitch.body.map((p) => <p>{p}</p>)}
       <h3>{pitch.howTitle}</h3>
       <ul>{pitch.how.map((h) => <li>{h}</li>)}</ul>
-      <a class="pitch-cta" href="https://lupusmalus.dev">{pitch.cta}</a>
+      <a class="pitch-cta" href={pitch.href}>{pitch.cta}</a>
       <p class="pitch-small">{pitch.small}</p>
     </div>
 
