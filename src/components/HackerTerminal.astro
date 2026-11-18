@@ -14,7 +14,7 @@ const { badge, pwned } = Astro.props;
     <em>wolf@pack:~ <span class="pwn">· {pwned} /dev/wolves</span></em>
     <button type="button" class="hterm-min" tabindex="-1">_</button>
   </div>
-  <pre class="hterm-out" id="hterm-out"></pre>
+  <pre class="hterm-out" id="hterm-out" tabindex="-1"></pre>
 </aside>
 
 <style>
@@ -43,7 +43,7 @@ const { badge, pwned } = Astro.props;
   .hterm-bar em { font-style: normal; color: var(--wolf-dim); margin-left: 6px; flex: 1; }
   .hterm-min { background: none; border: 0; color: var(--wolf-dim); font: inherit; cursor: pointer; padding: 0 4px; }
   .hterm-out { margin: 0; padding: 8px 10px; height: 124px; overflow: hidden; white-space: pre-wrap; word-break: break-word; }
-  .hterm-out.static { overflow-y: auto; overscroll-behavior: contain; }
+  .hterm-out.static { overflow-y: auto; }
   .hterm-out :global(.r) { color: var(--wolf-accent); }
   .hterm-out :global(.w) { color: #fff; }
   .pwn { display: none; color: #fff; }
@@ -130,6 +130,8 @@ const { badge, pwned } = Astro.props;
   if (takeover) {
     new IntersectionObserver(([e]) => {
       term.classList.toggle('gone', e.isIntersecting);
+      // Unsichtbar heißt auch: nicht fokussierbar, nicht klickbar.
+      term.toggleAttribute('inert', e.isIntersecting);
       document.body.classList.toggle('pwned', e.isIntersecting);
     }, { threshold: 0.05 }).observe(takeover);
   }
