@@ -8,7 +8,8 @@ const { badge, pwned } = Astro.props;
   <span class="blink" aria-hidden="true">●</span> {badge} <b>/dev/wolves</b>
 </a>
 
-<aside class="hterm" id="hterm" aria-hidden="true">
+<!-- Lauert zunächst unsichtbar; taucht ab der Kamera-Freigabe eingeklappt auf, nach dem Hack offen. -->
+<aside class="hterm lurk min" id="hterm" aria-hidden="true" inert>
   <div class="hterm-bar">
     <span></span><span></span><span></span>
     <em>wolf@pack:~ <span class="pwn">· {pwned} /dev/wolves</span></em>
@@ -26,6 +27,8 @@ const { badge, pwned } = Astro.props;
     box-shadow: 0 6px 18px -8px rgba(0,0,0,.5);
   }
   .defaced:hover { opacity: 1; }
+  /* Die Plakette erscheint erst mit dem Hack. */
+  :global(body:not(.breached)) .defaced { display: none; }
   .defaced b { color: #fff; }
   .blink { color: var(--wolf-accent); animation: blink 1.1s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
@@ -37,7 +40,8 @@ const { badge, pwned } = Astro.props;
     transition: opacity .4s, transform .4s;
   }
   .hterm.min .hterm-out { display: none; }
-  .hterm.gone { opacity: 0; transform: translateY(20px); pointer-events: none; }
+  .hterm.gone, .hterm.lurk { opacity: 0; transform: translateY(20px); pointer-events: none; }
+  .hterm.lurk { visibility: hidden; }
   .hterm-bar { display: flex; align-items: center; gap: 5px; padding: 6px 8px; border-bottom: 1px solid var(--wolf-line); }
   .hterm-bar > span { width: 8px; height: 8px; border-radius: 50%; background: var(--wolf-line); flex: none; }
   .hterm-bar em { font-style: normal; color: var(--wolf-dim); margin-left: 6px; flex: 1; }
@@ -64,8 +68,10 @@ const { badge, pwned } = Astro.props;
   const toLatest = () => { if (!out.classList.contains('static')) out.scrollTop = out.scrollHeight; };
   // Beim Aufklappen war die Ausgabe versteckt und hatte keine Höhe: danach zur neuesten Zeile.
   term.querySelector('.hterm-min')!.addEventListener('click', () => { term.classList.toggle('min'); toLatest(); });
-  // Auf schmalen Schirmen startet das Terminal eingeklappt – sichtbar, aber nicht im Weg.
-  if (window.matchMedia('(max-width: 560px)').matches) term.classList.add('min');
+  // Stufe 2: ab der Kamera-Freigabe taucht das Terminal eingeklappt auf (Markup startet mit "lurk min").
+  const reveal = () => { if (term.classList.contains('lurk')) { term.classList.remove('lurk'); term.removeAttribute('inert'); } };
+  const perm = document.getElementById('permission');
+  if (perm) new IntersectionObserver(([e], io) => { if (e.isIntersecting) { reveal(); io.disconnect(); } }, { threshold: 0.2 }).observe(perm);
 
   // Live verfolgen: Die Einstellung kann sich ändern, während die Seite offen ist.
   const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -79,6 +85,7 @@ const { badge, pwned } = Astro.props;
   // Nach dem Hack: Angriffsmodus. Die Wölfe arbeiten jetzt sichtbar am Agent.
   window.addEventListener('breach', () => {
     script = prep(i18n.hackerBreach); i = 0;
+    reveal();
     if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min');
     if (reduceMq.matches) showStatic();
     toLatest();
@@ -131,7 +138,7 @@ const { badge, pwned } = Astro.props;
     new IntersectionObserver(([e]) => {
       term.classList.toggle('gone', e.isIntersecting);
       // Unsichtbar heißt auch: nicht fokussierbar, nicht klickbar.
-      term.toggleAttribute('inert', e.isIntersecting);
+      term.toggleAttribute('inert', e.isIntersecting || term.classList.contains('lurk'));
       document.body.classList.toggle('pwned', e.isIntersecting);
     }, { threshold: 0.05 }).observe(takeover);
   }

@@ -103,7 +103,7 @@ const lastChange = t.changelog.entries.length - 1;
           ))}
           <p class="footnote">{t.bench.foot}</p>
         </div>
-        <WolfNote prefix={W} text={t.bench.wolf} />
+        <WolfNote stage={1} prefix="//" text={t.bench.wolf} />
         <Thought label={t.thought(2)} text={t.bench.thought} />
       </div>
     </section>
@@ -118,7 +118,7 @@ const lastChange = t.changelog.entries.length - 1;
             <div class={'card' + (i === 3 ? ' tilt' : '')}><div class="icon">{icon}</div><h3>{title}</h3><p>{text}</p></div>
           ))}
         </div>
-        <WolfNote prefix={W} text={t.features.wolf} />
+        <WolfNote stage={1} prefix="//" text={t.features.wolf} />
         <p class="footnote">{t.features.foot}</p>
         <Thought label={t.thought(4)} text={t.features.thought} />
       </div>
@@ -138,7 +138,7 @@ const lastChange = t.changelog.entries.length - 1;
           </div>
           <p class="perm-thanks serif" id="perm-thanks" hidden>{t.permission.thanks}</p>
         </div>
-        <WolfNote prefix={W} text={t.permission.wolf} align="left" />
+        <WolfNote stage={2} prefix="// wolves:" text={t.permission.wolf} align="left" />
       </div>
     </section>
 
@@ -161,7 +161,7 @@ const lastChange = t.changelog.entries.length - 1;
             </article>
           ))}
         </div>
-        <WolfNote prefix={W} text={t.social.wolf} />
+        <WolfNote stage={2} prefix="// wolves:" text={t.social.wolf} />
       </div>
     </section>
 
@@ -230,7 +230,7 @@ const lastChange = t.changelog.entries.length - 1;
     <!-- ===================== AKT 3: Kontext voll ===================== -->
     <section id="compact" class="compact">
       <div class="wrap">
-        <h2>{t.compact.h2}</h2>
+        <h2 id="compact-h2" tabindex="-1">{t.compact.h2}</h2>
         <p class="compact-status" id="compact-status">{t.compact.status}</p>
         <ul class="compact-list" id="compact-list"></ul>
       </div>
@@ -238,6 +238,23 @@ const lastChange = t.changelog.entries.length - 1;
 
     <Takeover t={t.takeover} pitch={t.pitch} foot={t.foot} />
   </main>
+
+  <!-- Fake-Systemdialog: Die Komprimierung passiert dahinter, ohne dass die Seite unter dem Leser springt. -->
+  <dialog class="ctx-dialog" id="ctx-dialog" aria-labelledby="ctx-dialog-title">
+    <div class="cd-head">
+      <span class="cd-icon" aria-hidden="true">⚠</span>
+      <div>
+        <h2 id="ctx-dialog-title" tabindex="-1" autofocus>{t.compact.dialogTitle}</h2>
+        <p class="cd-meta">{t.compact.dialogMeta}</p>
+      </div>
+      <button type="button" class="cd-x" id="ctx-dialog-x" aria-label={t.compact.dialogClose}>×</button>
+    </div>
+    <p class="cd-status" id="ctx-dialog-status" aria-live="polite">{t.compact.status}</p>
+    <div class="cd-bar" aria-hidden="true"><span id="ctx-dialog-bar"></span></div>
+    <ul class="cd-list" id="ctx-dialog-list"></ul>
+    <p class="cd-wolf" id="ctx-dialog-wolf" hidden><span class="cd-wolf-p">{W}</span> {t.compact.dialogWolf}</p>
+    <div class="cd-foot"><button type="button" class="btn btn-primary" id="ctx-dialog-ok" disabled>{t.compact.dialogButton}</button></div>
+  </dialog>
 
   <script>
     const i18n = JSON.parse(document.getElementById('i18n')!.textContent!);
@@ -343,21 +360,42 @@ const lastChange = t.changelog.entries.length - 1;
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // ---------- Komprimieren: alles darüber schrumpft auf eine Zeile ----------
+    // ---------- Komprimieren: als Fake-Dialog. Dahinter schrumpft alles darüber auf eine Zeile. ----------
     const list = document.getElementById('compact-list')!;
     const status = document.getElementById('compact-status')!;
+    const compactH2 = document.getElementById('compact-h2')!;
+    const dlg = document.getElementById('ctx-dialog') as HTMLDialogElement;
+    const dlgStatus = document.getElementById('ctx-dialog-status')!;
+    const dlgBar = document.getElementById('ctx-dialog-bar')!;
+    const dlgList = document.getElementById('ctx-dialog-list')!;
+    const dlgWolf = document.getElementById('ctx-dialog-wolf')!;
+    const dlgOk = document.getElementById('ctx-dialog-ok') as HTMLButtonElement;
     const c = i18n.compact;
+
+    // Schließen erst, wenn die Seite dahinter fertig umgebaut ist – sonst sähe man den Sprung doch.
+    let ready = false;
+    const closeDialog = () => { if (ready && dlg.open) dlg.close(); };
+    dlgOk.addEventListener('click', closeDialog);
+    document.getElementById('ctx-dialog-x')!.addEventListener('click', closeDialog);
+    dlg.addEventListener('cancel', (e) => { if (!ready) e.preventDefault(); });
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) closeDialog(); }); // Klick auf den Hintergrund
+    dlg.addEventListener('close', () => {
+      document.documentElement.classList.remove('dialog-open');
+      compactH2.focus({ preventScroll: true });
+      window.dispatchEvent(new Event('ctx-dialog-closed'));
+    });
 
     const compactPage = () => {
       compacted = true;
       setCtx(100);
       label.textContent = i18n.compacting;
+      document.documentElement.classList.add('dialog-open');
+      dlg.showModal();
+      requestAnimationFrame(() => dlgBar.classList.add('run'));
       const sections = () => document.querySelectorAll<HTMLElement>('main > section[data-summary]');
       sections().forEach((sec) => sec.classList.add('fading'));
 
       setTimeout(() => {
-        // Position des Abschnitts merken, damit die Seite beim Schrumpfen nicht springt.
-        const before = compactSec.getBoundingClientRect().top;
         sections().forEach((sec) => {
           const summary = sec.dataset.summary!;
           sec.className = 'compacted';
@@ -366,10 +404,16 @@ const lastChange = t.changelog.entries.length - 1;
           sec.querySelector('p')!.append(summary);
         });
         intrusion.classList.add('compacted-intrusion');
-        window.scrollBy(0, compactSec.getBoundingClientRect().top - before);
+        // Hinter dem Dialog: den komprimierten Abschnitt oben unter die Navigation legen.
+        const navH = document.querySelector('.nav')!.getBoundingClientRect().height;
+        window.scrollTo({ top: compactSec.offsetTop - navH - 16, behavior: 'instant' });
 
         setCtx(9);
         status.textContent = c.done;
+        dlgStatus.textContent = c.done;
+        ready = true;
+        dlgBar.classList.add('done');
+        dlgOk.disabled = false;
 
         const bullets: string[] = [...c.base];
         if (openedThought) bullets.push(c.openedThought);
@@ -378,12 +422,15 @@ const lastChange = t.changelog.entries.length - 1;
         if (movedBack) bullets.push(c.sliderBack);
         bullets.push(c.last);
         bullets.forEach((b, i) => setTimeout(() => {
-          const li = document.createElement('li');
-          li.textContent = b;
-          if (i === bullets.length - 1) li.className = 'last';
-          list.append(li);
-        }, reduce ? 0 : 500 + i * 650));
-      }, reduce ? 0 : 1800);
+          for (const target of [list, dlgList]) {
+            const li = document.createElement('li');
+            li.textContent = b;
+            if (i === bullets.length - 1) li.className = 'last';
+            target.append(li);
+          }
+          if (i === bullets.length - 1) dlgWolf.hidden = false;
+        }, reduceMq.matches ? 0 : 400 + i * 550));
+      }, reduceMq.matches ? 0 : 1800);
     };
 
     new IntersectionObserver(([e]) => {

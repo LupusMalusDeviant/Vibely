@@ -25,15 +25,21 @@ npm run build    # statisch nach dist/, je Sprache eine eigenständige HTML-Date
 | `src/components/Thought.astro` | Aufklappbares „Nachdenken“ des Verkaufs-Agents |
 | `src/components/Demo.astro` | Agent behebt einen Tippfehler und zerlegt dabei alles |
 | `src/components/AgentChat.astro` | Chat-Agent, der je Abschnitt aufdringlicher wird; Tab-Titel-Gag |
-| `src/components/HackerTerminal.astro` | „hacked by /dev/wolves“-Plakette + Film-Hacker-Terminal |
+| `src/components/HackerTerminal.astro` | „hacked by /dev/wolves“-Plakette (ab dem Hack) + Film-Hacker-Terminal (ab der Kamera-Freigabe) |
 | `src/components/Takeover.astro` | Der ernste Teil: Vibe Coding vs. Agentic Engineering |
 
 ## Mechaniken
 
 - **Kontextfenster:** Leiste unter der Navigation, füllt sich mit der Scrolltiefe.
-- **Komprimierung:** Erreicht man „Kontextfenster voll“, schrumpft jeder Abschnitt mit
-  `data-summary` auf eine Zeile. Die Zusammenfassung erwähnt, ob man einen Gedanken
-  aufgeklappt oder den Preisregler bewegt hat. „Kontext wiederherstellen“ lädt neu.
+- **Komprimierung:** Erreicht man „Kontextfenster voll“, öffnet sich ein Fake-Systemdialog
+  (`<dialog id="ctx-dialog">`). Dahinter schrumpft jeder Abschnitt mit `data-summary` auf eine
+  Zeile, ohne dass die Seite unter dem Leser springt; schließen lässt sich der Dialog erst danach.
+  Die Zusammenfassung erwähnt, ob man einen Gedanken aufgeklappt oder den Preisregler bewegt hat.
+  „Kontext wiederherstellen“ lädt neu.
+- **Der Hack schleicht sich ein:** Hero und Feed sind sauber. Benchmark und Features tragen
+  Randnotizen, die wie vergessene Code-Kommentare aussehen (`WolfNote stage={1}`). Ab der
+  Kamera-Freigabe werden sie dunkel (`stage={2}`) und das Hacker-Terminal taucht eingeklappt auf.
+  Erst mit der Unterbrechung kommen Plakette, offenes Terminal und schiefe rote Notizen.
 - Keine Tracker, nichts wird gesendet. `prefers-reduced-motion` schaltet die Animationen ab.
 
 Neuer Abschnitt, der mitkomprimiert werden soll: `<section data-summary={…}>` direkt in `<main>`.

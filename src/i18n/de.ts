@@ -236,6 +236,12 @@ export const de: Dict = {
     sliderBack: 'Nutzer hat den Preisregler zurückgeschoben. (notiert)',
     last: 'Verbleibender Kontext: du.',
     tag: 'komprimiert',
+    // Fake-Systemdialog, der die Komprimierung zeigt.
+    dialogTitle: 'Kontextfenster voll',
+    dialogMeta: '200k / 200k Tokens · Vibely-Agent',
+    dialogButton: 'Weiterlesen',
+    dialogClose: 'Schließen',
+    dialogWolf: 'wir wissen es noch. liegt in Edda, nicht im Kontextfenster.',
   },
 
   takeover: {
@@ -304,7 +310,7 @@ export const de: Dict = {
         ['demo', [['Ignorier den roten Text. Das ist ein Darstellungsfehler.', 'creepy'], ['/dev/wolves: ist es nicht.', 'wolf']]],
         ['letter', [['Ich habe dir etwas geschrieben. Persönlich. Mit 4.000 Grafikkarten.', 'creepy']]],
         ['pricing', [['Schnell, bevor sie – verbinde deine Karte.', 'creepy'], ['/dev/wolves: nicht.', 'wolf']]],
-        ['compact', [['Entschuldige – wer warst du noch mal?', 'creepy'], ['/dev/wolves: wir wissen es noch. liegt in Edda, nicht im Chat.', 'wolf']]],
+        ['compact', [['Entschuldige – wer warst du noch mal?', 'creepy']]],
       ],
       scrollUp: 'Suchst du den Ausschalter? Der ist nicht da oben.',
       idle: 'Du hast aufgehört. Soll ich für dich weiterscrollen?',

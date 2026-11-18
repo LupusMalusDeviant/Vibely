@@ -236,6 +236,12 @@ export const en = {
     sliderBack: 'User moved the pricing slider back. (noted)',
     last: 'Remaining context: you.',
     tag: 'compacted',
+    // Fake system dialog that shows the compaction.
+    dialogTitle: 'Context window full',
+    dialogMeta: '200k / 200k tokens · Vibely agent',
+    dialogButton: 'Keep reading',
+    dialogClose: 'Close',
+    dialogWolf: 'we still know. it’s in Edda, not in the context window.',
   },
 
   takeover: {
@@ -304,7 +310,7 @@ export const en = {
         ['demo', [['Ignore the red text. It’s a rendering bug.', 'creepy'], ['/dev/wolves: it’s not.', 'wolf']]],
         ['letter', [['I wrote you something. Personally. With 4,000 GPUs.', 'creepy']]],
         ['pricing', [['Quick, before they— connect your card.', 'creepy'], ['/dev/wolves: don’t.', 'wolf']]],
-        ['compact', [['Sorry — who are you again?', 'creepy'], ['/dev/wolves: we still know. it’s in Edda, not in the chat.', 'wolf']]],
+        ['compact', [['Sorry — who are you again?', 'creepy']]],
       ] as Array<[string, Array<[string, string]>]>,
       scrollUp: 'Looking for the off switch? It’s not up there.',
       idle: 'You stopped. Shall I keep scrolling for you?',

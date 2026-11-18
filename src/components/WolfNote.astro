@@ -1,10 +1,12 @@
 ---
 // Randnotiz von /dev/wolves, die sich beim Sichtbarwerden eintippt.
 // Steht schon vor dem Hack auf der Seite: Die Wölfe sind "seit dem Hero in den Wänden".
-interface Props { prefix: string; text: string; align?: 'left' | 'right' }
-const { prefix, text, align = 'right' } = Astro.props;
+// stage 1: sieht aus wie ein vergessener Code-Kommentar. stage 2: dunkle Notiz, noch gerade.
+// stage 3 (nach dem Hack): schief, rot, unübersehbar.
+interface Props { prefix: string; text: string; align?: 'left' | 'right'; stage?: 1 | 2 | 3 }
+const { prefix, text, align = 'right', stage = 3 } = Astro.props;
 ---
-<aside class={`wolfnote ${align}`} data-text={text}>
+<aside class={`wolfnote ${align} s${stage}`} data-text={text}>
   <span class="wn-prefix">{prefix}</span> <span class="wn-text">{text}</span>
 </aside>
 
@@ -18,6 +20,12 @@ const { prefix, text, align = 'right' } = Astro.props;
   }
   .wolfnote.right { margin-left: auto; transform: rotate(1.2deg); }
   .wn-prefix { color: var(--wolf-dim); }
+  .wolfnote.s1 {
+    color: var(--muted); background: transparent; border: 1px dashed var(--line);
+    box-shadow: none; transform: none; font-size: 12px;
+  }
+  .wolfnote.s1 .wn-prefix { color: var(--muted); }
+  .wolfnote.s2 { transform: none; box-shadow: 0 4px 12px -8px rgba(0,0,0,.4); }
 </style>
 
 <script>

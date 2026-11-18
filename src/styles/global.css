@@ -270,7 +270,41 @@ section.compacted { padding: 10px 0; }
 section.compacted p { margin: 0; font: 13px var(--mono); color: #a6a3b3; }
 section.compacted .tag { color: var(--brand); }
 
+/* Fake-Systemdialog. Solange er offen ist, steht die Seite still (kein Sprung sichtbar). */
+/* Beim Sperren bleibt der Platz der Bildlaufleiste reserviert, damit nichts seitlich rutscht. */
+html.dialog-open { overflow: hidden; scrollbar-gutter: stable; }
+.ctx-dialog {
+  width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto;
+  padding: 22px 22px 18px; border: 1px solid var(--line); border-radius: 18px;
+  background: #fff; color: var(--ink); box-shadow: 0 30px 80px -20px rgba(22, 20, 31, .45);
+}
+.ctx-dialog::backdrop { background: rgba(22, 20, 31, .45); backdrop-filter: blur(3px); }
+.ctx-dialog[open] { animation: dlg-in .25s ease-out; }
+@keyframes dlg-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+.cd-head { display: flex; gap: 12px; align-items: flex-start; }
+.cd-icon { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: #fdecea; color: var(--bad); font-size: 17px; }
+.cd-head > div { flex: 1; min-width: 0; }
+.ctx-dialog h2 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+.ctx-dialog h2:focus { outline: none; }
+.cd-meta { margin: 2px 0 0; font: 12px var(--mono); color: var(--muted); }
+.cd-x { flex: none; border: 0; background: none; font-size: 24px; line-height: 1; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 8px; }
+.cd-x:hover, .cd-x:focus-visible { background: var(--brand-soft); color: var(--brand); }
+.cd-status { margin: 16px 0 8px; font: 13px var(--mono); color: var(--muted); }
+.cd-bar { height: 6px; border-radius: 99px; background: var(--brand-soft); overflow: hidden; }
+.cd-bar span { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(1); background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
+.cd-bar span.run { animation: cd-shrink 1.8s ease-in-out forwards; }
+@keyframes cd-shrink { from { transform: scaleX(1); } to { transform: scaleX(.09); } }
+.cd-list { list-style: none; padding: 0; margin: 14px 0 0; font-family: var(--serif); font-size: 18px; }
+.cd-list li { padding: 4px 0; animation: appear .4s ease-out; }
+.cd-list li::before { content: '— '; color: var(--brand); }
+.cd-list li.last { margin-top: 10px; font-size: 22px; }
+.cd-wolf { margin: 14px 0 0; padding: 8px 12px; font: 12.5px/1.45 var(--mono); color: var(--wolf); background: var(--wolf-bg); border: 1px solid var(--wolf-line); border-radius: 6px; }
+.cd-wolf-p { color: var(--wolf-dim); }
+.cd-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
+.cd-foot .btn[disabled] { opacity: .45; cursor: progress; }
+
 .compact { padding: 140px 0 160px; min-height: 90vh; }
+.compact h2:focus { outline: none; }
 .compact h2 { font-family: var(--serif); font-weight: 500; letter-spacing: 0; }
 .compact-status { font: 14px var(--mono); color: var(--muted); }
 .compact-list { list-style: none; padding: 0; margin: 26px 0 0; font-family: var(--serif); font-size: 21px; }
