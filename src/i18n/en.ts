@@ -263,7 +263,7 @@ export const en = {
     sig: '// a word from our sponsor (it’s us)',
     h2: 'Hi. I’m the human behind the wolves.',
     body: [
-      'I’m lupusmalusdeviant, a developer from Mecklenburg-Vorpommern with no agency in between. I build websites, private clouds and automation for freelancers, small businesses and non-profit clubs.',
+      'I’m (e)Ric from Lupus Malus Deviant Development, a developer from Mecklenburg-Vorpommern with no agency in between. I build websites, private clouds and automation for freelancers, small businesses and non-profit clubs.',
       'I work with AI every single day, and agents write a lot of my code. But I don’t hand over the thinking. I use agents as leverage for my skills: the spec, the architecture, the review and the responsibility stay with me.',
       'That’s the difference between agentic engineering and vibe coding — and it’s the only kind of speed that lasts.',
     ],

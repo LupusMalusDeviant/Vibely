@@ -265,7 +265,7 @@ export const de: Dict = {
     sig: '// Werbung in eigener Sache (wir sind der Sponsor)',
     h2: 'Hi. Ich bin der Mensch hinter den Wölfen.',
     body: [
-      'Ich bin lupusmalusdeviant, Entwickler aus Mecklenburg-Vorpommern, ohne Agentur dazwischen. Ich baue Websites, eigene Clouds und Automatisierungen für Selbstständige, kleine Unternehmen und Vereine.',
+      'Ich bin (e)Ric von Lupus Malus Deviant Development, Entwickler aus Mecklenburg-Vorpommern, ohne Agentur dazwischen. Ich baue Websites, eigene Clouds und Automatisierungen für Selbstständige, kleine Unternehmen und Vereine.',
       'Ich arbeite jeden Tag mit KI, und Agents schreiben einen großen Teil meines Codes. Das Denken gebe ich aber nicht ab. Ich nutze Agents als Hebel für meine Fähigkeiten: Spezifikation, Architektur, Prüfung und Verantwortung bleiben bei mir.',
       'Das ist der Unterschied zwischen Agentic Engineering und Vibe Coding – und die einzige Geschwindigkeit, die hält.',
     ],
