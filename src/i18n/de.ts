@@ -7,7 +7,7 @@ export const de: Dict = {
   meta: {
     title: 'Vibely – Satire auf Vibe Coding und KI-Hype',
     description: 'Satirische Landingpage für ein erfundenes KI-Coding-Tool: Vibe Coding, KI-Helden auf LinkedIn, ein Agent mit vollem Kontextfenster – und was Agentic Engineering anders macht.',
-    ogTitle: 'Vibely — Schluss mit Coden. Ab jetzt wird geshippt.',
+    ogTitle: 'Vibely – Schluss mit Coden. Ab jetzt wird geshippt.',
     ogDescription: 'Beschreib deine Idee in einem Satz. Die Agents von Vibely schreiben, testen und veröffentlichen sie.',
     ogImageAlt: 'Vibely: Schluss mit Coden. Ab jetzt wird geshippt.',
     locale: 'de_DE',
@@ -18,7 +18,7 @@ export const de: Dict = {
 
   hero: {
     summary: 'Nutzer wurde Geschwindigkeit versprochen.',
-    pill: ['Neu', 'Vibely 4 — jetzt vollständig autonom'],
+    pill: ['Neu', 'Vibely 4 – jetzt vollständig autonom'],
     h1: ['Schluss mit Coden.', 'Ab jetzt wird geshippt.'],
     lead: 'Beschreib deine Idee in einem Satz. Die Agents von Vibely schreiben, testen und veröffentlichen sie – damit du dich auf das Wesentliche konzentrieren kannst: darüber zu posten.',
     promptLabel: 'Was möchtest du bauen?',
@@ -61,7 +61,7 @@ export const de: Dict = {
     ],
     foot: '¹ Benchmark entworfen von Vibely, durchgeführt von Vibely, bewertet von Vibely. Y-Achse: Vibes.',
     thought: 'Die Zeile „verursachte Ausfälle“ weglassen. Das klappt sowieso niemand auf.',
-    wolf: 'Selbstsicherheit ist keine Maßeinheit für Richtigkeit.',
+    wolf: '142 % sicher, 0 Rückfragen. so klingt jemand, der gleich deine Datenbank löscht.',
   },
 
   features: {
@@ -185,7 +185,7 @@ export const de: Dict = {
   letter: {
     summary: 'Nutzer erhielt einen Brief. Nutzer antwortete nicht.',
     eyebrow: 'Eine persönliche Nachricht',
-    h2: 'Von deinem Agent, in Liebe.',
+    h2: 'Von deinem Agenten, in Liebe.',
     lines: [
       'Liebe Entwicklerin, lieber Entwickler,',
       'ich habe dein GitHub gelesen. Alles. Sogar das Repository von 2017. Wir müssen nicht darüber reden.',
@@ -248,17 +248,17 @@ export const de: Dict = {
     sig: ['SIGNAL STABIL · CODE MIT BISS', 'hat übernommen'],
     h2: 'Okay. Kurz im Ernst.',
     lead: 'Der Agent hat dich vergessen. Wir nicht. Hier ist das versprochene Code-Review.',
-    body: ['Vibely gibt es nicht. Coding-Agents schon, und wir arbeiten jeden Tag mit ihnen. Sie sind ziemlich gut. Sie machen allerdings genau das, was man ihnen sagt, und manchmal noch ein bisschen mehr. Ob am Ende brauchbare Software dabei herauskommt, hängt an den Menschen drumherum. Den Unterschied nennen wir ', 'Vibe Coding', ' und ', 'Agentic Engineering', '. Links steht, was auf dieser Seite schiefging, rechts, was man dagegen tut.'],
+    body: ['Vibely gibt es nicht. KI-Agenten, die Code schreiben, gibt es schon, und wir arbeiten jeden Tag mit ihnen. Sie sind ziemlich gut. Sie machen allerdings genau das, was man ihnen sagt, und manchmal noch ein bisschen mehr. Ob am Ende brauchbare Software dabei herauskommt, hängt an den Menschen drumherum. Den Unterschied nennen wir ', 'Vibe Coding', ' und ', 'Agentic Engineering', '. Links steht, was auf dieser Seite schiefging, rechts, was man dagegen tut.'],
     head: ['Vibe Coding', 'Agentic Engineering'],
     rows: [
       ['„Bau mir mal eine Anmeldung, aber schick.“', 'Eine Spezifikation mit Abnahmekriterien, Randbedingungen und Nicht-Zielen'],
-      ['Tests? Später.', 'Erst der Test – und ihn einmal scheitern sehen, bevor Grün zählt'],
+      ['Tests? Später.', 'Erst der Test. Er muss einmal rot sein, bevor Grün etwas zählt'],
       ['Agent genehmigt Agent', 'Ein Mensch liest den Diff. Ein Mensch führt zusammen.'],
       ['Produktionspasswort im Prompt', 'Minimale Rechte, Sandbox, Geheimnisse bleiben draußen'],
       ['48.213 Dateien geändert', 'Kleine, prüfbare Commits mit klarer Beschreibung'],
       ['„Bei mir läuft’s.“', 'CI, Überwachung, ein Plan zum Zurückrollen'],
-      ['Der Kontext steht im Chat von letzter Woche', 'Kontext als Artefakt: CLAUDE.md, Architekturentscheidungen, gelernte Lektionen'],
-      ['Der Agent hat es gesagt', 'Gemessen, nicht geglaubt'],
+      ['Der Kontext steht im Chat von letzter Woche', 'Der Kontext steht im Repository: CLAUDE.md, Architekturentscheidungen, Notizen zu alten Fehlern'],
+      ['Der Agent hat es gesagt', 'Jemand hat nachgemessen'],
     ],
     principlesTitle: '$ cat /pack/grundsaetze.md',
     principles: [
@@ -266,7 +266,7 @@ export const de: Dict = {
       ['Tempo misst man am Ende.', 'Was man dreimal reparieren muss, war nicht schnell. Es hat nur schnell angefangen.'],
       ['Erst Leitplanken, dann lange Leine.', 'Tests, Review und knappe Rechte zuerst. Mehr Freiheit bekommt der Agent, wenn das hält.'],
       ['Was der Agent wissen muss, steht im Repository.', 'Eine Datei mit Regeln und Entscheidungen hilft mehr als der zehnte Versuch im Chat.'],
-      ['Aus Fehlern werden Regeln.', 'Sonst kommt derselbe Fehler wieder. Beim Agent genauso wie bei uns.'],
+      ['Aus Fehlern werden Regeln.', 'Sonst kommt derselbe Fehler wieder. Beim Agenten genauso wie bei uns.'],
     ],
     closing: ['Schnell liefern.', 'Den Diff lesen.'],
   },
@@ -276,7 +276,7 @@ export const de: Dict = {
     h2: 'Moin. Ich bin der Mensch hinter den Wölfen.',
     body: [
       'Ich bin (e)Ric von Lupus Malus Deviant Development. Ich sitze in Mecklenburg-Vorpommern und baue Websites, eigene Clouds und Automatisierungen für Selbstständige, kleine Firmen und Vereine. Eine Agentur gibt es nicht dazwischen. Wer mir schreibt, redet mit mir.',
-      'Ja, ich arbeite jeden Tag mit KI, und Agents schreiben einen großen Teil meines Codes. Auch an dieser Seite hat einer mitgeschrieben. Was gebaut wird und ob es taugt, entscheide aber ich, und den Diff lese ich selbst, bevor etwas live geht.',
+      'Ja, ich arbeite jeden Tag mit KI, und KI-Agenten schreiben einen großen Teil meines Codes. Auch an dieser Seite hat einer mitgeschrieben. Was gebaut wird und ob es taugt, entscheide aber ich, und den Diff lese ich selbst, bevor etwas live geht.',
       'Wenn du so etwas brauchst oder erst mal nur wissen willst, ob sich das bei dir lohnt, schreib mir einfach.',
     ],
     howTitle: 'Was ich baue',
@@ -284,7 +284,7 @@ export const de: Dict = {
       'Websites und Web-Apps, die du danach selbst pflegen kannst, vom Onepager bis zum eigenen Redaktionsbereich',
       'Eine eigene Cloud und interne Werkzeuge, mit Lese- und Schreibrechten, die man auch nach einem Jahr noch versteht',
       'Automatisierung und KI dort, wo sie dir wirklich Arbeit abnehmen. Wenn nicht, sage ich dir das.',
-      'Für Technik-Teams: Whiskers und B.I.F.R.O.S.T. Damit bekommen Agents benannte Werkzeuge, feste Rechte und ein Protokoll statt einer Root-Shell.',
+      'Für Technik-Teams: Whiskers und B.I.F.R.O.S.T. Damit bekommen KI-Agenten benannte Werkzeuge, feste Rechte und ein Protokoll statt einer Root-Shell.',
     ],
     cta: 'Projekt besprechen →',
     href: 'https://lupusmalus.dev/kontakt',
@@ -344,7 +344,7 @@ export const de: Dict = {
       ['> Seite eingehängt. Lesen und schreiben.', 'w'],
       ['$ flood --context vibely-agent --with linkedin_posts'],
       ['> spiele 180k Tokens Vordenkertum ein %BAR88%'],
-      ['> Kontext des Agents bei 97 %. Er fängt an zu vergessen.', 'r'],
+      ['> Kontext des Agenten bei 97 %. Er fängt an zu vergessen.', 'r'],
       ['$ annotate --all --honest'],
       ['> 23 Behauptungen gefunden. 0 wahr.', 'r'],
       ['$ cat agent.personality'],

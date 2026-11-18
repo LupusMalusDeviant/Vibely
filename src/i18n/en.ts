@@ -61,7 +61,7 @@ export const en = {
     ] as Array<[string, number, string, number, string]>,
     foot: '¹ Benchmark designed by Vibely, run by Vibely, graded by Vibely. Y-axis: vibes.',
     thought: 'Leave out the row “incidents caused”. Nobody opens these.',
-    wolf: 'confidence is not a unit of correctness.',
+    wolf: '142 % sure, 0 questions. that’s how it sounds right before someone drops your database.',
   },
 
   features: {
@@ -252,13 +252,13 @@ export const en = {
     head: ['vibe coding', 'agentic engineering'],
     rows: [
       ['“Build me a login, make it pop.”', 'A spec with acceptance criteria, constraints and non-goals'],
-      ['Tests? Later.', 'Test first — and watch it fail once before green counts'],
+      ['Tests? Later.', 'Test first. It has to go red once before green means anything'],
       ['Agent approves agent', 'A human reads the diff. A human merges.'],
       ['Prod password in the prompt', 'Least privilege, sandboxes, secrets stay out'],
       ['48,213 files changed', 'Small, reviewable commits with clear messages'],
       ['“Works on my machine”', 'CI, monitoring, a rollback plan'],
       ['Context lives in last week’s chat', 'Context as an artifact: CLAUDE.md, ADRs, lessons learned'],
-      ['The agent said so', 'Measured, not believed'],
+      ['The agent said so', 'Somebody measured it'],
     ] as Array<[string, string]>,
     principlesTitle: '$ cat /pack/principles.md',
     principles: [
