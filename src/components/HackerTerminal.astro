@@ -87,7 +87,8 @@ const { badge, pwned } = Astro.props;
   window.addEventListener('breach', () => {
     script = prep(i18n.hackerBreach); i = 0;
     reveal();
-    term.classList.remove('min'); // auch auf schmalen Schirmen: der Hack ist jetzt offiziell
+    // Auf schmalen Schirmen bleibt es eingeklappt: offen würde es Bedienelemente verdecken.
+    if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min');
     if (reduceMq.matches) showStatic();
     toLatest();
   });

@@ -249,7 +249,9 @@ const lastChange = t.changelog.entries.length - 1;
       </div>
       <button type="button" class="cd-x" id="ctx-dialog-x" aria-label={t.compact.dialogClose} disabled>×</button>
     </div>
-    <p class="cd-status" id="ctx-dialog-status" aria-live="polite">{t.compact.status}</p>
+    <p class="cd-status" id="ctx-dialog-status">{t.compact.status}</p>
+    <!-- Vorlesen erst, wenn alles dasteht und der Dialog sich schließen lässt. -->
+    <p class="cd-live" id="ctx-dialog-live" aria-live="polite"></p>
     <div class="cd-bar" aria-hidden="true"><span id="ctx-dialog-bar"></span></div>
     <ul class="cd-list" id="ctx-dialog-list"></ul>
     <p class="cd-wolf" id="ctx-dialog-wolf" hidden><span class="cd-wolf-p">{W}</span> {t.compact.dialogWolf}</p>
@@ -370,6 +372,7 @@ const lastChange = t.changelog.entries.length - 1;
     const dlgList = document.getElementById('ctx-dialog-list')!;
     const dlgWolf = document.getElementById('ctx-dialog-wolf')!;
     const dlgOk = document.getElementById('ctx-dialog-ok') as HTMLButtonElement;
+    const dlgLive = document.getElementById('ctx-dialog-live')!;
     const c = i18n.compact;
 
     // Schließen erst, wenn die Seite dahinter fertig umgebaut ist – sonst sähe man den Sprung doch.
@@ -399,7 +402,10 @@ const lastChange = t.changelog.entries.length - 1;
       const sections = () => document.querySelectorAll<HTMLElement>('main > section[data-summary]');
       sections().forEach((sec) => sec.classList.add('fading'));
 
-      setTimeout(() => {
+      // Auch ohne Animation erst umbauen, wenn der deckende Hintergrund gemalt ist (zwei Frames).
+      const after = (ms: number, fn: () => void) =>
+        ms ? setTimeout(fn, ms) : requestAnimationFrame(() => requestAnimationFrame(fn));
+      after(reduceMq.matches ? 0 : 1800, () => {
         sections().forEach((sec) => {
           const summary = sec.dataset.summary!;
           sec.className = 'compacted';
@@ -432,9 +438,12 @@ const lastChange = t.changelog.entries.length - 1;
             target.append(li);
           }
           // Erst wenn alles dasteht (Liste + Wolfs-Zeile), darf man schließen.
-          if (i === bullets.length - 1) { dlgWolf.hidden = false; ready = true; dlgOk.disabled = false; dlgX.disabled = false; }
+          if (i === bullets.length - 1) {
+            dlgWolf.hidden = false; ready = true; dlgOk.disabled = false; dlgX.disabled = false;
+            dlgLive.textContent = `${c.done} ${bullets.join(' ')} ${c.dialogButton}.`;
+          }
         }, reduceMq.matches ? 0 : 400 + i * 550));
-      }, reduceMq.matches ? 0 : 1800);
+      });
     };
 
     new IntersectionObserver(([e]) => {
