@@ -56,7 +56,8 @@ const { badge, pwned } = Astro.props;
     .hterm { width: 240px; font-size: 10px; }
     .hterm-out { height: 86px; }
     .defaced { display: none; }
-    .pwn { display: inline; }
+    /* Auf schmalen Schirmen ersetzt das Label die Plakette – aber erst ab dem Hack. */
+    :global(body.breached) .pwn { display: inline; }
   }
 </style>
 
@@ -86,7 +87,7 @@ const { badge, pwned } = Astro.props;
   window.addEventListener('breach', () => {
     script = prep(i18n.hackerBreach); i = 0;
     reveal();
-    if (!window.matchMedia('(max-width: 560px)').matches) term.classList.remove('min');
+    term.classList.remove('min'); // auch auf schmalen Schirmen: der Hack ist jetzt offiziell
     if (reduceMq.matches) showStatic();
     toLatest();
   });

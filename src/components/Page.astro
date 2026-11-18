@@ -247,13 +247,13 @@ const lastChange = t.changelog.entries.length - 1;
         <h2 id="ctx-dialog-title" tabindex="-1" autofocus>{t.compact.dialogTitle}</h2>
         <p class="cd-meta">{t.compact.dialogMeta}</p>
       </div>
-      <button type="button" class="cd-x" id="ctx-dialog-x" aria-label={t.compact.dialogClose}>×</button>
+      <button type="button" class="cd-x" id="ctx-dialog-x" aria-label={t.compact.dialogClose} disabled>×</button>
     </div>
     <p class="cd-status" id="ctx-dialog-status" aria-live="polite">{t.compact.status}</p>
     <div class="cd-bar" aria-hidden="true"><span id="ctx-dialog-bar"></span></div>
     <ul class="cd-list" id="ctx-dialog-list"></ul>
     <p class="cd-wolf" id="ctx-dialog-wolf" hidden><span class="cd-wolf-p">{W}</span> {t.compact.dialogWolf}</p>
-    <div class="cd-foot"><button type="button" class="btn btn-primary" id="ctx-dialog-ok" disabled>{t.compact.dialogButton}</button></div>
+    <div class="cd-foot"><button type="button" class="btn btn-primary cd-ok" id="ctx-dialog-ok" disabled>{t.compact.dialogButton}</button></div>
   </dialog>
 
   <script>
@@ -376,7 +376,8 @@ const lastChange = t.changelog.entries.length - 1;
     let ready = false;
     const closeDialog = () => { if (ready && dlg.open) dlg.close(); };
     dlgOk.addEventListener('click', closeDialog);
-    document.getElementById('ctx-dialog-x')!.addEventListener('click', closeDialog);
+    const dlgX = document.getElementById('ctx-dialog-x') as HTMLButtonElement;
+    dlgX.addEventListener('click', closeDialog);
     dlg.addEventListener('cancel', (e) => { if (!ready) e.preventDefault(); });
     dlg.addEventListener('click', (e) => { if (e.target === dlg) closeDialog(); }); // Klick auf den Hintergrund
     dlg.addEventListener('close', () => {
@@ -390,6 +391,9 @@ const lastChange = t.changelog.entries.length - 1;
       setCtx(100);
       label.textContent = i18n.compacting;
       document.documentElement.classList.add('dialog-open');
+      // Solange umgebaut wird, deckt der Hintergrund die Seite ganz ab; der Chat scrollt nicht mehr.
+      dlg.classList.add('busy');
+      window.dispatchEvent(new Event('ctx-compacting'));
       dlg.showModal();
       requestAnimationFrame(() => dlgBar.classList.add('run'));
       const sections = () => document.querySelectorAll<HTMLElement>('main > section[data-summary]');
@@ -411,9 +415,8 @@ const lastChange = t.changelog.entries.length - 1;
         setCtx(9);
         status.textContent = c.done;
         dlgStatus.textContent = c.done;
-        ready = true;
         dlgBar.classList.add('done');
-        dlgOk.disabled = false;
+        dlg.classList.remove('busy');
 
         const bullets: string[] = [...c.base];
         if (openedThought) bullets.push(c.openedThought);
@@ -428,7 +431,8 @@ const lastChange = t.changelog.entries.length - 1;
             if (i === bullets.length - 1) li.className = 'last';
             target.append(li);
           }
-          if (i === bullets.length - 1) dlgWolf.hidden = false;
+          // Erst wenn alles dasteht (Liste + Wolfs-Zeile), darf man schließen.
+          if (i === bullets.length - 1) { dlgWolf.hidden = false; ready = true; dlgOk.disabled = false; dlgX.disabled = false; }
         }, reduceMq.matches ? 0 : 400 + i * 550));
       }, reduceMq.matches ? 0 : 1800);
     };

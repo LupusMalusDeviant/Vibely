@@ -95,11 +95,14 @@
       if (window.scrollY < 600 || agent.classList.contains('gone')) return armIdle();
       saidIdle = true;
       say([[i18n.agent.idle, 'creepy']]);
-      setTimeout(() => { if (!reduceMq.matches) window.scrollBy({ top: 320, behavior: 'smooth' }); }, 2200);
+      scrollTimer = window.setTimeout(() => { if (!reduceMq.matches) window.scrollBy({ top: 320, behavior: 'smooth' }); }, 2200);
     }, 9000);
   };
+  let scrollTimer: number | undefined;
   window.addEventListener('scroll', armIdle, { passive: true });
   armIdle();
+  // Ab der Komprimierung scrollt der Agent nicht mehr „für dich“ – sonst verrutscht die Seite hinter dem Dialog.
+  window.addEventListener('ctx-compacting', () => { saidIdle = true; clearTimeout(idleTimer); clearTimeout(scrollTimer); }, { once: true });
 
   // Tab-Titel wechselt, wenn man den Tab verlässt.
   const original = document.title;

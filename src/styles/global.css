@@ -278,7 +278,9 @@ html.dialog-open { overflow: hidden; scrollbar-gutter: stable; }
   padding: 22px 22px 18px; border: 1px solid var(--line); border-radius: 18px;
   background: #fff; color: var(--ink); box-shadow: 0 30px 80px -20px rgba(22, 20, 31, .45);
 }
-.ctx-dialog::backdrop { background: rgba(22, 20, 31, .45); backdrop-filter: blur(3px); }
+.ctx-dialog::backdrop { background: rgba(22, 20, 31, .5); backdrop-filter: blur(3px); transition: background .4s; }
+/* Während des Umbaus deckt der Hintergrund die Seite ganz ab, damit kein Sprung zu sehen ist. */
+.ctx-dialog.busy::backdrop { background: #16141f; }
 .ctx-dialog[open] { animation: dlg-in .25s ease-out; }
 @keyframes dlg-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
 .cd-head { display: flex; gap: 12px; align-items: flex-start; }
@@ -294,6 +296,7 @@ html.dialog-open { overflow: hidden; scrollbar-gutter: stable; }
 .cd-bar span { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(1); background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
 .cd-bar span.run { animation: cd-shrink 1.8s ease-in-out forwards; }
 @keyframes cd-shrink { from { transform: scaleX(1); } to { transform: scaleX(.09); } }
+.cd-bar span.done { transform: scaleX(.09); }
 .cd-list { list-style: none; padding: 0; margin: 14px 0 0; font-family: var(--serif); font-size: 18px; }
 .cd-list li { padding: 4px 0; animation: appear .4s ease-out; }
 .cd-list li::before { content: '— '; color: var(--brand); }
@@ -301,7 +304,10 @@ html.dialog-open { overflow: hidden; scrollbar-gutter: stable; }
 .cd-wolf { margin: 14px 0 0; padding: 8px 12px; font: 12.5px/1.45 var(--mono); color: var(--wolf); background: var(--wolf-bg); border: 1px solid var(--wolf-line); border-radius: 6px; }
 .cd-wolf-p { color: var(--wolf-dim); }
 .cd-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
+/* Volle Fläche statt Verlauf: Weiß auf #6d4aff hat 5,15:1 (der Verlauf fällt zum hellen Ende unter 4,5:1). */
+.cd-foot .cd-ok { background: var(--brand); }
 .cd-foot .btn[disabled] { opacity: .45; cursor: progress; }
+.cd-x[disabled] { opacity: .35; cursor: progress; }
 
 .compact { padding: 140px 0 160px; min-height: 90vh; }
 .compact h2:focus { outline: none; }
