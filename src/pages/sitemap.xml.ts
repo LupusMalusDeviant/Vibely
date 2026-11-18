@@ -11,11 +11,10 @@ export const GET: APIRoute = ({ site }) => {
     .map(([l, href]) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${href}"/>`)
     .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${pages.en}"/>`)
     .join('\n');
-  const lastmod = new Date().toISOString().slice(0, 10);
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${Object.values(pages)
-  .map((loc) => `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n${alt}\n  </url>`)
+  .map((loc) => `  <url>\n    <loc>${loc}</loc>\n${alt}\n  </url>`)
   .join('\n')}
 </urlset>
 `;
