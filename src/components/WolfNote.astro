@@ -12,12 +12,12 @@ const { prefix, text, align = 'right' } = Astro.props;
   .wolfnote {
     display: block; width: fit-content; max-width: min(420px, 100%);
     margin: 14px 0 0; padding: 8px 12px; text-align: left;
-    font: 12.5px/1.45 var(--mono); color: #39ff88; background: #0b0f0c;
-    border: 1px solid #1d3a26; border-radius: 6px; transform: rotate(-1.2deg);
+    font: 12.5px/1.45 var(--mono); color: var(--wolf); background: var(--wolf-bg);
+    border: 1px solid var(--wolf-line); border-radius: 6px; transform: rotate(-1.2deg);
     box-shadow: 0 8px 20px -10px rgba(0,0,0,.45);
   }
   .wolfnote.right { margin-left: auto; transform: rotate(1.2deg); }
-  .wn-prefix { color: #6fae84; }
+  .wn-prefix { color: var(--wolf-dim); }
 </style>
 
 <script>

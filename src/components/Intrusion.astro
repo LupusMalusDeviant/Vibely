@@ -14,17 +14,17 @@ const { lines } = Astro.props;
 
 <style>
   .intrusion {
-    background: #050706; color: #c9f5d6; min-height: 100vh; display: flex; align-items: center;
+    background: var(--wolf-bg); color: var(--wolf-text); min-height: 100vh; display: flex; align-items: center;
     position: relative; overflow: hidden;
   }
   .intrusion::before {
     content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(57,255,136,.05) 0 1px, transparent 1px 3px);
+    background: repeating-linear-gradient(0deg, rgba(220,38,38,.05) 0 1px, transparent 1px 3px);
   }
   .intrusion .wrap { width: 100%; position: relative; }
   pre { margin: 0; font: clamp(15px, 2.6vw, 21px)/1.7 var(--mono); white-space: pre-wrap; min-height: 14em; }
-  pre :global(.r) { color: #ff3b5c; font-weight: 700; }
-  pre :global(.w) { color: #fff; background: #1d3a26; padding: 0 4px; }
+  pre :global(.r) { color: var(--wolf-accent); font-weight: 700; }
+  pre :global(.w) { color: #fff; background: var(--wolf-deep); padding: 0 4px; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .intrusion.flash { animation: flash .6s steps(2) 2; }
   @keyframes flash { 50% { filter: invert(1) hue-rotate(90deg); transform: translateX(-6px); } }

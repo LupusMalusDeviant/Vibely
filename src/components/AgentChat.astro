@@ -24,7 +24,7 @@
     padding: 12px 14px; font-size: 14px; box-shadow: var(--shadow); animation: pop .25s ease-out;
   }
   .agent-stack :global(.bubble.creepy) { font-family: var(--serif); font-size: 16px; }
-  .agent-stack :global(.bubble.wolf) { font: 12.5px/1.45 var(--mono); background: #0b0f0c; color: #39ff88; border-color: #1d3a26; border-radius: 6px; }
+  .agent-stack :global(.bubble.wolf) { font: 12.5px/1.45 var(--mono); background: var(--wolf-bg); color: var(--wolf); border-color: var(--wolf-line); border-radius: 6px; }
   @keyframes pop { from { opacity: 0; transform: translateY(6px); } }
   .agent.gone { display: none; }
   :global(body.breached) .agent-fab { animation: twitch 4s infinite; }

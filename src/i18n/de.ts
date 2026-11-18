@@ -275,7 +275,7 @@ export const de: Dict = {
       'Automatisierung und KI mit Augenmaß: dort, wo sie wirklich Arbeit abnimmt – und ein ehrliches Wort, wo nicht',
       'Für Technik-Teams: Whiskers und B.I.F.R.O.S.T geben Agents benannte Werkzeuge, Rechte und ein Audit-Log statt einer Root-Shell',
     ],
-    cta: 'Projekt besprechen →',
+    cta: 'Projekt besprechen →',
     href: 'https://lupusmalus.dev/kontakt',
     small: 'Das Erstgespräch ist kostenlos, ich antworte meist innerhalb von zwei Werktagen. Kein Agent meldet sich bei dir. Ich mache das selbst.',
   },

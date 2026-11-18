@@ -31,7 +31,7 @@ const { t } = Astro.props;
   pre :global(.ok) { color: #59e39b; }
   pre :global(.warn) { color: #ffcc66; }
   pre :global(.bad) { color: #ff6b81; }
-  pre :global(.wolf) { color: #39ff88; background: rgba(57,255,136,.08); }
+  pre :global(.wolf) { color: var(--wolf); background: rgba(220,38,38,.12); }
   .demo-mark { position: absolute; right: 16px; bottom: 12px; font: 700 11px var(--mono); color: #4a4560; letter-spacing: .1em; }
   @media (max-width: 560px) { pre { font-size: 12px; min-height: 600px; } }
 </style>

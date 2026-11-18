@@ -14,6 +14,21 @@
   --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --max: 760px;
+
+  /* /dev/wolves = lupusmalus.dev, Theme „Blood Moon“ (css/main.css dort). Vibely bleibt lila. */
+  --wolf: #f87171;          /* --color-primary-text: Text auf Dunkel */
+  --wolf-strong: #dc2626;   /* --color-primary: Flächen, Ränder */
+  --wolf-deep: #991b1b;     /* --color-primary-dark */
+  --wolf-light: #fca5a5;    /* --color-primary-light */
+  --wolf-accent: #f59e0b;   /* --color-accent: Warnungen */
+  --wolf-bg: #0a0a0a;       /* --color-bg */
+  --wolf-bg-2: #1a1a1a;     /* --color-bg-elevated */
+  --wolf-bg-3: #262626;     /* --color-bg-secondary */
+  --wolf-text: #e5e5e5;     /* --color-text-muted */
+  --wolf-dim: #b5b5b5;      /* --color-text-dim */
+  --wolf-line: #525252;     /* --color-border */
+  --wolf-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --wolf-head: 'Poppins', 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -50,10 +65,10 @@ a { color: inherit; }
 }
 .ctx-label.hot { color: var(--bad); border-color: #f1c9c6; }
 
-:is(body.pwned, body.pwned-i) .nav { background: rgba(7, 10, 8, .92); border-color: #1d3a26; }
-:is(body.pwned, body.pwned-i) .nav .logo { color: #39ff88; font-family: var(--mono); }
-:is(body.pwned, body.pwned-i) .nav .btn-primary { background: #39ff88; color: #070a08; box-shadow: none; }
-:is(body.pwned, body.pwned-i) .nav .lang { color: #6fae84; }
+:is(body.pwned, body.pwned-i) .nav { background: rgba(10, 10, 10, .92); border-color: var(--wolf-line); }
+:is(body.pwned, body.pwned-i) .nav .logo { color: var(--wolf); font-family: var(--mono); }
+:is(body.pwned, body.pwned-i) .nav .btn-primary { background: var(--wolf-strong); color: #fff; box-shadow: none; }
+:is(body.pwned, body.pwned-i) .nav .lang { color: var(--wolf-dim); }
 body.pwned .ctx-label, body.pwned .ctx-bar { display: none; }
 
 /* ---------- Buttons ---------- */
@@ -169,7 +184,7 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .changes li.last { transform: rotate(0.4deg); }
 .changes li.last .txt { font-family: var(--serif); font-weight: 500; font-size: 20px; }
 .changes li.last time { color: var(--bad); }
-.changes li.reverted .txt { text-decoration: line-through; text-decoration-color: #39ff88; text-decoration-thickness: 2px; }
+.changes li.reverted .txt { text-decoration: line-through; text-decoration-color: var(--wolf-strong); text-decoration-thickness: 2px; }
 
 /* ---------- Preisrechner ---------- */
 .calc { margin-top: 40px; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 28px; box-shadow: var(--shadow); }
@@ -226,7 +241,7 @@ h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
 .cta-wrap { position: relative; }
 .stamp {
   position: absolute; right: 10%; top: 50%; transform: translateY(-50%) rotate(-9deg); pointer-events: none;
-  font: 700 30px var(--mono); color: #39ff88; background: #0b0f0c; border: 2px solid #39ff88; padding: 0 14px;
+  font: 700 30px var(--mono); color: var(--wolf); background: var(--wolf-bg); border: 2px solid var(--wolf-strong); padding: 0 14px;
   opacity: 0; transition: opacity .3s;
 }
 body.breached .stamp { opacity: .95; }
@@ -234,12 +249,12 @@ body.breached .stamp { opacity: .95; }
 /* ---------- Nach dem Hack: die Seite ist gebrochen ---------- */
 body.breached::after {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 15;
-  background: repeating-linear-gradient(0deg, rgba(20,60,30,.05) 0 1px, transparent 1px 3px);
+  background: repeating-linear-gradient(0deg, rgba(60,10,10,.05) 0 1px, transparent 1px 3px);
 }
 body.breached .card, body.breached .calc, body.breached .changes, body.breached .bench { filter: saturate(.35); }
 body.breached .logo-word { position: relative; }
 body.breached .logo-word::after {
-  content: '/dev/wolves'; position: absolute; left: 0; top: 0; color: #39ff88; background: var(--bg);
+  content: '/dev/wolves'; position: absolute; left: 0; top: 0; color: var(--wolf-strong); background: var(--bg);
   font-family: var(--mono); font-size: 17px; animation: logoflip 5s infinite steps(1);
 }
 @keyframes logoflip { 0%, 82% { opacity: 0; } 83%, 92% { opacity: 1; } 93% { opacity: 0; } 95%, 97% { opacity: 1; } }

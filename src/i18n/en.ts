@@ -273,7 +273,7 @@ export const en = {
       'Automation and AI with a sense of proportion: where it actually takes work off your plate — and an honest word where it doesn’t',
       'For tech teams: Whiskers and B.I.F.R.O.S.T give agents named tools, permissions and an audit log instead of a root shell',
     ],
-    cta: 'Let’s talk about your project →',
+    cta: 'Let’s talk about your project →',
     href: 'https://lupusmalus.dev/kontakt',
     small: 'The first call is free, and I usually reply within two working days. No agent will contact you. I will. (The site is in German.)',
   },
